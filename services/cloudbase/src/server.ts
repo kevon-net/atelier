@@ -23,13 +23,13 @@ export const createClient = async () => {
       async setAll(cookiesToSet) {
         const host = (await headers()).get('host') ?? '';
         const isLocalhost = host.includes('localhost');
-        const isProdDomain = host.endsWith('meridianbyte.com');
+        const isProdDomain = host.endsWith('atelier.com');
 
         try {
           cookiesToSet.forEach(({ name, value, options }) =>
             cookieStore.set(name, value, {
               ...options,
-              domain: isProdDomain ? '.meridianbyte.com' : undefined,
+              domain: isProdDomain ? '.atelier.com' : undefined,
               secure: !isLocalhost,
               sameSite: 'lax',
               path: '/',

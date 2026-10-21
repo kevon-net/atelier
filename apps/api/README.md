@@ -1,14 +1,14 @@
-# MeridianByte API
+# Atelier API
 
-Shared backend infrastructure powering MeridianByte applications and services.
+Shared backend infrastructure powering Atelier applications and services.
 
-The API layer provides centralized business capabilities, data access, authentication, and communication patterns used across MeridianByte products.
+The API layer provides centralized business capabilities, data access, authentication, and communication patterns used across Atelier products.
 
 ---
 
 ## Purpose
 
-`apps/api` provides the backend foundation for MeridianByte.
+`apps/api` provides the backend foundation for Atelier.
 
 Its responsibilities include:
 
@@ -25,10 +25,10 @@ Applications consume these capabilities instead of implementing backend logic in
 
 ## Role in the Ecosystem
 
-MeridianByte applications share common backend capabilities:
+Atelier applications share common backend capabilities:
 
 ```
-              MeridianByte API
+              Atelier API
 
                     |
         +-----------+-----------+
@@ -60,7 +60,7 @@ Examples:
 
 ### Shared Domain Services
 
-The API exposes reusable capabilities for MeridianByte products.
+The API exposes reusable capabilities for Atelier products.
 
 Examples:
 
@@ -96,7 +96,7 @@ Each domain can evolve independently while sharing common infrastructure.
 
 ## Data Layer
 
-The API integrates with MeridianByte's shared database layer:
+The API integrates with Atelier's shared database layer:
 
 ```
 apps/api
@@ -192,4 +192,4 @@ The public web application uses API services for:
 
 ## Status
 
-Early-stage. The MeridianByte API platform is under active development as the shared foundation for current and future products.
+Early-stage. The Atelier API platform is under active development as the shared foundation for current and future products.

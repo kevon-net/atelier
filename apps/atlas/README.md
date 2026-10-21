@@ -1,6 +1,6 @@
 # Atlas
 
-A unified productivity platform by MeridianByte designed to connect everyday workflows into a single, cohesive system.
+A unified productivity platform by Atelier designed to connect everyday workflows into a single, cohesive system.
 
 Atlas combines personal productivity domains such as tasks, notes, time, health, and finance into one integrated experience.
 
@@ -25,7 +25,7 @@ It is a unified system for understanding and navigating life through connected d
 
 ## Application Structure
 
-Atlas is delivered as the core MeridianByte application:
+Atlas is delivered as the core Atelier application:
 
 ```
 /apps/atlas
@@ -63,7 +63,7 @@ Manage financial information and connect it with personal insights.
 
 ## Architecture
 
-Atlas follows MeridianByte's modular product architecture.
+Atlas follows Atelier's modular product architecture.
 
 ### Thin Application Layer
 
@@ -79,7 +79,7 @@ Core business logic remains in shared packages.
 
 ### Shared Core
 
-Reusable logic is provided through MeridianByte packages:
+Reusable logic is provided through Atelier packages:
 
 - Business rules
 - Data access
@@ -131,7 +131,7 @@ This enables powerful interactions without tightly coupling domains.
 Atlas is served as a unified application:
 
 ```
-atlas.meridianbyte.app (just for protocol. personal use.)
+atlas.atelier.app (just for protocol. personal use.)
 atlas.mbyte.app (additional. preferred for actual end users.)
 
 ```
@@ -140,7 +140,7 @@ atlas.mbyte.app (additional. preferred for actual end users.)
 
 ## Design System
 
-Atlas uses MeridianByte's shared design system:
+Atlas uses Atelier's shared design system:
 
 - Components
 - Tokens
@@ -165,7 +165,7 @@ This ensures a consistent experience throughout the product.
 
 ## Development
 
-From the MeridianByte repository root:
+From the Atelier repository root:
 
 Install dependencies:
 
@@ -183,7 +183,7 @@ pnpm --filter atlas dev
 
 ## Environment Setup
 
-Atlas uses shared MeridianByte environment configuration.
+Atlas uses shared Atelier environment configuration.
 
 Required variables include:
 
@@ -212,6 +212,6 @@ Early-stage. Atlas architecture and core productivity features are under active 
 
 ---
 
-## Part of MeridianByte
+## Part of Atelier
 
-Atlas is a MeridianByte solution built on top of shared ecosystem infrastructure.
+Atlas is a Atelier solution built on top of shared ecosystem infrastructure.

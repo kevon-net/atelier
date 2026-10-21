@@ -12,12 +12,12 @@ interface CountdownState {
   isLive: boolean;
 }
 
-interface MeridianByteComingSoonProps {
+interface AtelierComingSoonProps {
   /** Target launch date ISO string or Date object */
   targetLaunchDate?: string | Date;
 }
 
-export const MeridianByteComingSoon: React.FC<MeridianByteComingSoonProps> = ({
+export const AtelierComingSoon: React.FC<AtelierComingSoonProps> = ({
   targetLaunchDate = '2027-01-01T00:00:00',
 }) => {
   const [timeLeft, setTimeLeft] = useState<CountdownState>({
@@ -183,4 +183,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default MeridianByteComingSoon;
+export default AtelierComingSoon;

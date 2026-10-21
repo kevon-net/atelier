@@ -1,4 +1,4 @@
-export const COMPANY_NAME = 'MeridianByte';
+export const COMPANY_NAME = 'Atelier';
 
 export const PHONES = {
   MAIN: '(254) 123 456-789',
@@ -145,8 +145,8 @@ export const MODAL_VIEW_NAMES = {
 };
 
 export const APP_DESC = {
-  API: 'The MeridianByte API layer provides centralized business capabilities, data access, authentication, and communication patterns used across MeridianByte products.',
-  WEB: 'This application provides the entry point for users, customers, and visitors to discover MeridianByte products, learn about solutions, and begin their journey into the ecosystem.',
+  API: 'The Atelier API layer provides centralized business capabilities, data access, authentication, and communication patterns used across Atelier products.',
+  WEB: 'This application provides the entry point for users, customers, and visitors to discover Atelier products, learn about solutions, and begin their journey into the ecosystem.',
   ATLAS:
-    'Discover Atlas by Meridianbyte, an open-source productivity suite unifying notes, tasks, time tracking, fitness, and finance into a single, cohesive ecosystem.',
+    'Discover Atlas by Atelier, an open-source productivity suite unifying notes, tasks, time tracking, fitness, and finance into a single, cohesive ecosystem.',
 };

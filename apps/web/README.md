@@ -1,14 +1,14 @@
-# MeridianByte Web
+# Atelier Web
 
-The public-facing web application for the MeridianByte ecosystem.
+The public-facing web application for the Atelier ecosystem.
 
-This application provides the entry point for users, customers, and visitors to discover MeridianByte products, learn about solutions, and begin their journey into the ecosystem.
+This application provides the entry point for users, customers, and visitors to discover Atelier products, learn about solutions, and begin their journey into the ecosystem.
 
 ---
 
 ## Purpose
 
-`apps/web` serves as the external-facing layer of MeridianByte.
+`apps/web` serves as the external-facing layer of Atelier.
 
 Its responsibilities include:
 
@@ -19,18 +19,18 @@ Its responsibilities include:
 - User onboarding flows
 - Public content
 
-The web application is separate from individual MeridianByte products, allowing it to evolve independently.
+The web application is separate from individual Atelier products, allowing it to evolve independently.
 
 ---
 
 ## Role in the Ecosystem
 
-MeridianByte consists of multiple products and services.
+Atelier consists of multiple products and services.
 
 The web application acts as the gateway into these experiences:
 
 ```
-meridianbyte.com
+atelier.com
         |
         |
         +-- Atlas
@@ -44,7 +44,7 @@ It introduces users to the ecosystem while product applications handle authentic
 
 ## Architecture
 
-The web application follows MeridianByte's thin application principle.
+The web application follows Atelier's thin application principle.
 
 It focuses on:
 
@@ -53,7 +53,7 @@ It focuses on:
 - User experience
 - Content presentation
 
-Business logic and shared capabilities are provided through MeridianByte packages and services.
+Business logic and shared capabilities are provided through Atelier packages and services.
 
 ---
 
@@ -86,7 +86,7 @@ Current and future capabilities include:
 ## Technology
 
 - Framework: Next.js
-- UI: MeridianByte Design System
+- UI: Atelier Design System
 - Styling: Tailwind / Mantine
 - Tooling: pnpm, Turborepo
 
@@ -128,16 +128,16 @@ Additional variables may be added as new features are introduced.
 
 ### Atlas
 
-Atlas is the primary MeridianByte product application.
+Atlas is the primary Atelier product application.
 
 The web application provides discovery and onboarding, while Atlas provides the authenticated product experience.
 
 ### API
 
-The web application communicates with MeridianByte backend services through shared APIs.
+The web application communicates with Atelier backend services through shared APIs.
 
 ---
 
 ## Status
 
-Early-stage. The MeridianByte web experience is under active development.
+Early-stage. The Atelier web experience is under active development.
