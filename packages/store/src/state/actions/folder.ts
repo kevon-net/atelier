@@ -1,0 +1,136 @@
+import { APP_NAMES_ATLAS } from '@repo/constants';
+import { useStoreFolder } from '../folder';
+import { useStoreSession } from '../session';
+import { FolderGet } from '@repo/types';
+import { SyncStatus } from '@repo/types';
+import { generateCopyTitle, generateUUID } from '@repo/utils';
+import { useStoreCalendar } from '../calendar';
+import { useStoreNote } from '../note';
+import { useStoreTaskList } from '../task-list';
+import { useStoreActiveItems } from '../active-items';
+
+export const useFolderActions = () => {
+  const session = useStoreSession((s) => s.session);
+  const folders = useStoreFolder((s) => s.folders);
+  const addFolder = useStoreFolder((s) => s.addFolder);
+  const updateFolder = useStoreFolder((s) => s.updateFolder);
+  const deleteFolder = useStoreFolder((s) => s.deleteFolder);
+
+  const calendars = useStoreCalendar((s) => s.calendars);
+  const setCalendars = useStoreCalendar((s) => s.setCalendars);
+  const notes = useStoreNote((s) => s.notes);
+  const setNotes = useStoreNote((s) => s.setNotes);
+  const taskLists = useStoreTaskList((s) => s.taskLists);
+  const setTaskLists = useStoreTaskList((s) => s.setTaskLists);
+  const activeWorkspace = useStoreActiveItems((s) => s.activeItems?.workspace);
+
+  const folderCreate = (params: Omit<Partial<FolderGet>, 'type'>) => {
+    if (!session) return;
+    if (!activeWorkspace) return;
+    if (folders === undefined || folders === null) return;
+
+    const id = generateUUID();
+    const now = new Date();
+
+    // Extracts existing titles to check for collision
+    const existingTitles = folders
+      .filter((fi) => fi.location == params.location)
+      .map((n) => n.name);
+
+    // Handles cleanly: if params?.name is undefined, defaults to "New ..." / "New ... 1"
+    const folderName = generateCopyTitle(params?.name, existingTitles, 'New Folder');
+
+    const newFolder: FolderGet = {
+      id: params.id || id,
+      name: folderName,
+      location: params.location || '',
+      folderId: params.folderId || null,
+      workspaceId: params.workspaceId || activeWorkspace.id,
+      syncStatus: SyncStatus.PENDING,
+      createdAt: new Date(params.createdAt || now).toISOString() as any,
+      updatedAt: new Date(params.updatedAt || now).toISOString() as any,
+    };
+
+    addFolder(newFolder);
+
+    return newFolder;
+  };
+
+  const folderUpdate = (params: FolderGet) => {
+    if (!session) return;
+
+    const now = new Date();
+
+    const newFolder: FolderGet = {
+      ...params,
+      syncStatus: SyncStatus.PENDING,
+      createdAt: new Date(params.createdAt).toISOString() as any,
+      updatedAt: new Date(now).toISOString() as any,
+    };
+
+    updateFolder(newFolder);
+  };
+
+  const folderDelete = (params: FolderGet) => {
+    if (!session) return;
+
+    const folderLocation = params.location;
+
+    let locationProps: { relatedItems: any[]; updateFunction: (i: any[]) => void } = {
+      relatedItems: [],
+      updateFunction: () => {},
+    };
+
+    switch (folderLocation) {
+      case APP_NAMES_ATLAS.PAVE:
+        locationProps = {
+          relatedItems: calendars || [],
+          updateFunction: (ci: any[]) => setCalendars(ci),
+        };
+        break;
+      case APP_NAMES_ATLAS.JOT:
+        locationProps = {
+          relatedItems: notes || [],
+          updateFunction: (ni: any[]) => setNotes(ni),
+        };
+        break;
+      case APP_NAMES_ATLAS.STRIDE:
+        locationProps = {
+          relatedItems: taskLists || [],
+          updateFunction: (tl: any[]) => setTaskLists(tl),
+        };
+        break;
+
+      default:
+        break;
+    }
+
+    const now = new Date();
+
+    const needsUnlink = locationProps.relatedItems.some((ri) => ri.folderId == params.id);
+
+    // unlink relevant items from folder
+    if (needsUnlink) {
+      locationProps.updateFunction(
+        locationProps.relatedItems.map((ri) => {
+          if (ri.folderId != params.id) return ri;
+          return {
+            ...ri,
+            folderId: null,
+            syncStatus: SyncStatus.PENDING,
+            updatedAt: new Date(now).toISOString() as any,
+          };
+        }),
+      );
+    }
+
+    deleteFolder({
+      ...params,
+      syncStatus: SyncStatus.DELETED,
+      createdAt: new Date(params.createdAt).toISOString() as any,
+      updatedAt: new Date(now).toISOString() as any,
+    });
+  };
+
+  return { folderCreate, folderUpdate, folderDelete };
+};

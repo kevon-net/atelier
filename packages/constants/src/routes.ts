@@ -1,0 +1,25 @@
+export const authRoutes = [
+  '/auth/sign-in',
+  '/auth/error',
+  '/auth/sign-out',
+
+  // Add other auth routes
+];
+
+export const protectedRoutes = [
+  // '/',
+  // Add other protected routes
+];
+
+export const ignoredRoutes = [
+  '/manifest.webmanifest',
+  '/robots.txt',
+
+  // Add other ignored routes
+];
+
+export const ignoredAuthRoutes = [
+  '/auth/sign-out',
+
+  // Add other ignored auth routes
+];

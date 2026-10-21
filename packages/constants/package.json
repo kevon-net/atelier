@@ -1,0 +1,26 @@
+{
+  "name": "@repo/constants",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mantine/core": "^9.4.2",
+    "@mantine/dates": "^9.4.2",
+    "@repo/types": "workspace:*",
+    "next": "16.2.10"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "typescript": "^5.6.2"
+  }
+}

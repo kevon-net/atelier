@@ -1,0 +1,410 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import {
+  TasksValue,
+  useStoreRecurringRule,
+  useStoreReminder,
+  useStoreTask,
+  useStoreTaskList,
+  useStoreView,
+  useSubView,
+  useViewModal,
+} from '@repo/store';
+import {
+  Box,
+  Button,
+  Card,
+  Center,
+  Checkbox,
+  CheckboxCard,
+  CheckboxIndicator,
+  Divider,
+  Grid,
+  GridCol,
+  Group,
+  Loader,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
+import {
+  capitalizeWords,
+  extractUuidFromParam,
+  getFrequencyDetails,
+  getPriorityDetails,
+  getRegionalDate,
+  isOverdue,
+  isToday,
+  isWithinNext7Days,
+  sortArray,
+} from '@repo/utils';
+import { LayoutSection } from '@repo/ui';
+import {
+  audios,
+  ICON_SIZE,
+  ICON_STROKE_WIDTH,
+  ICON_WRAPPER_SIZE,
+  MODAL_VIEW_NAMES,
+  SECTION_SPACING,
+  SUBVIEW_NAMES,
+} from '@repo/constants';
+import {
+  IconBell,
+  IconCalendarEvent,
+  IconCategory,
+  IconCircleFilled,
+  IconFlag,
+  IconPlus,
+  IconRepeat,
+} from '@tabler/icons-react';
+import { Frequency, Order, Priority, TaskGet } from '@repo/types';
+import FormTask from '@atlas/ui/form/task';
+import { useFormTask } from '@repo/hooks';
+import PartialEmpty from '../../empty';
+import { playNotificationSound } from '@repo/notifications';
+import InputTextEditorTitle from '@atlas/ui/input/text/editor-title';
+import { useTaskListTitle } from '@atlas/hooks/input';
+import { useMediaQuery } from '@mantine/hooks';
+
+export default function TaskList() {
+  const mobile = useMediaQuery('(max-width: 36em)');
+
+  const taskLists = useStoreTaskList((s) => s.taskLists);
+  const tasks = useStoreTask((s) => s.tasks);
+  const sortedTasks = sortArray(tasks || [], (i) => i.createdAt, Order.DESCENDING);
+  const { subViewValue } = useSubView();
+
+  const taskListId = extractUuidFromParam(subViewValue || '');
+
+  const taskList = taskLists?.find((tli) => tli.id == taskListId);
+
+  const { field, inputRef, handleBlur, handleKeyDown } = useTaskListTitle(taskList?.id || '');
+
+  // handle task filtering
+  let completeTasks: TasksValue = undefined;
+  let filteredTasks: TasksValue = undefined;
+
+  const isTaskList = subViewValue?.includes('list: ');
+
+  if (isTaskList) {
+    filteredTasks = sortedTasks?.filter(
+      (ti) => !ti.complete && ti.taskListId && ti.taskListId == taskList?.id,
+    );
+    completeTasks = sortedTasks?.filter(
+      (ti) => ti.complete && ti.taskListId && ti.taskListId == taskList?.id,
+    );
+  } else {
+    switch (subViewValue) {
+      case SUBVIEW_NAMES.STRIDE.INBOX:
+        filteredTasks = sortedTasks?.filter((ti) => !ti.complete && !ti.taskListId);
+        completeTasks = sortedTasks?.filter((ti) => ti.complete && !ti.taskListId);
+        break;
+      case SUBVIEW_NAMES.STRIDE.ALL:
+        filteredTasks = sortedTasks?.filter((ti) => !ti.complete);
+        completeTasks = sortedTasks?.filter((ti) => ti.complete);
+        break;
+      case SUBVIEW_NAMES.STRIDE.TODAY:
+        filteredTasks = sortedTasks?.filter(
+          (ti) => !ti.complete && ti.dueDate && isToday(ti.dueDate),
+        );
+        completeTasks = sortedTasks?.filter(
+          (ti) => ti.complete && ti.dueDate && isToday(ti.dueDate),
+        );
+        break;
+      case SUBVIEW_NAMES.STRIDE.UPCOMING:
+        filteredTasks = sortedTasks?.filter(
+          (ti) =>
+            !ti.complete && ti.dueDate && isWithinNext7Days(ti.dueDate, { excludeToday: true }),
+        );
+        completeTasks = sortedTasks?.filter(
+          (ti) =>
+            ti.complete && ti.dueDate && isWithinNext7Days(ti.dueDate, { excludeToday: true }),
+        );
+        break;
+      case SUBVIEW_NAMES.STRIDE.OVERDUE:
+        filteredTasks = sortedTasks?.filter(
+          (ti) => !ti.complete && ti.dueDate && isOverdue(ti.dueDate),
+        );
+        break;
+      case SUBVIEW_NAMES.STRIDE.COMPLETE:
+        filteredTasks = sortedTasks?.filter((ti) => ti.complete);
+        break;
+      default:
+        filteredTasks = sortedTasks;
+        break;
+    }
+  }
+
+  return (
+    <LayoutSection
+      id={'task-list'}
+      // containerized
+      containerized={mobile ? false : 'md'}
+    >
+      <Box py={{ base: 0, xs: SECTION_SPACING }}>
+        <Stack>
+          <div>
+            {!taskList ? (
+              <Group mih={42}>
+                <Title order={1} fz={'xl'}>
+                  {capitalizeWords(subViewValue || '')}
+                </Title>
+              </Group>
+            ) : (
+              <InputTextEditorTitle
+                inputProps={field.getInputProps()}
+                inputRef={inputRef}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                styles={{
+                  input: {
+                    fontSize: 'var(--mantine-font-size-xl)',
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              />
+            )}
+          </div>
+
+          {tasks === undefined || !filteredTasks?.length ? (
+            <div>
+              <PartialEmpty loading={tasks === undefined} label="No tasks found" />
+              <AddTask />
+            </div>
+          ) : (
+            <div>
+              {filteredTasks?.map((fti, i) => (
+                <div key={fti.id}>
+                  {i > 0 && (
+                    <Box px={{ md: SECTION_SPACING - 8 }}>
+                      <Divider />
+                    </Box>
+                  )}
+                  <TaskCard props={fti} />
+                </div>
+              ))}
+
+              <AddTask />
+            </div>
+          )}
+        </Stack>
+
+        {tasks === undefined || !completeTasks?.length ? null : (
+          <Box display={completeTasks && completeTasks.length > 0 ? undefined : 'none'}>
+            <Divider
+              my={'xl'}
+              label={'Complete'}
+              // labelPosition="left"
+              styles={{
+                label: {
+                  fontSize: 'var(--mantine-font-size-md)',
+                  fontWeight: 600,
+                  lineHeight: 0,
+                },
+              }}
+            />
+
+            <div>
+              {completeTasks?.map((cti, i) => (
+                <div key={cti.id}>
+                  {i > 0 && (
+                    <Box px={{ md: SECTION_SPACING - 8 }}>
+                      <Divider />
+                    </Box>
+                  )}
+                  <TaskCard props={cti} />
+                </div>
+              ))}
+            </div>
+          </Box>
+        )}
+      </Box>
+    </LayoutSection>
+  );
+}
+
+function TaskCard({ props, options }: { props?: TaskGet; options?: { add?: boolean } }) {
+  const taskLists = useStoreTaskList((s) => s.taskLists);
+  const taskList = taskLists?.find((tli) => tli.id == props?.taskListId);
+  const reminders = useStoreReminder((s) => s.reminders);
+  const reminder = reminders?.find((ri) => ri.taskId == props?.id);
+  const reminderDate = !reminder ? undefined : getRegionalDate(reminder.remindAt);
+  const recurringRules = useStoreRecurringRule((s) => s.recurringRules);
+  const recurringRule = recurringRules?.find((rri) => rri.id == props?.recurringRuleId);
+
+  const circleIcon = <IconCircleFilled size={4} />;
+  const { showModalViewTaskCrud } = useViewModal();
+
+  const { form } = useFormTask({
+    defaultValues: props,
+    options: { checkBox: true },
+  });
+
+  const priorityDetails = getPriorityDetails((props?.priority || '') as Priority);
+
+  return (
+    <Box
+      style={{
+        transition: '.25s all ease',
+        cursor: 'pointer',
+        borderRadius: 'var(--mantine-radius-md)',
+        overflow: 'hidden',
+      }}
+      className="hover:bg-[light-dark(var(--mantine-color-gray-1),var(--mantine-color-dark-8))]"
+    >
+      <Card withBorder={false} bg={'transparent'} radius={0} padding={0}>
+        <Grid gap={0}>
+          <GridCol span={{ base: 1.5, xs: 0.5 }}>
+            <Box mt={3} py={'md'} pl={{ base: 'md' }}>
+              {options?.add ? (
+                <ThemeIcon color={'pri'} variant="light" radius={99} size={20}>
+                  <IconPlus size={18} stroke={ICON_STROKE_WIDTH} />
+                </ThemeIcon>
+              ) : (
+                <Checkbox
+                  aria-label={'Complete'}
+                  defaultChecked={form.values.complete}
+                  {...form.getInputProps('complete')}
+                  size="sm"
+                  radius={99}
+                  styles={{ input: { borderWidth: 2 } }}
+                />
+              )}
+            </Box>
+          </GridCol>
+
+          <GridCol span={{ base: 10.5, xs: 11.5 }}>
+            <Box
+              py={'md'}
+              pl={'md'}
+              onClick={() => {
+                if (!options?.add && props?.id) {
+                  showModalViewTaskCrud(props.id, MODAL_VIEW_NAMES.CRUD.STRIDE.TASK.UPDATE);
+                }
+              }}
+            >
+              <Stack gap={5}>
+                <Text inherit fw={500} c={options?.add ? 'pri' : undefined}>
+                  {options?.add ? 'Add task' : props?.title}
+                </Text>
+
+                {!options?.add && (
+                  <Group gap={'xs'} fz={'xs'} c={'dimmed'}>
+                    {taskList && (
+                      <Group gap={5}>
+                        <Box c={!taskList.color ? undefined : `${taskList.color}.6`}>
+                          <IconCategory size={ICON_SIZE - 6} stroke={2} />
+                        </Box>
+
+                        <Text inherit>{taskList.title}</Text>
+                      </Group>
+                    )}
+
+                    {taskList && props?.dueDate && circleIcon}
+
+                    {props?.dueDate && (
+                      <Group gap={5}>
+                        <Box
+                          c={
+                            isToday(props.dueDate)
+                              ? 'blue.6'
+                              : isOverdue(props.dueDate)
+                                ? 'red.6'
+                                : undefined
+                          }
+                        >
+                          <IconCalendarEvent size={ICON_SIZE - 6} stroke={2} />
+                        </Box>
+
+                        <Text inherit>{getRegionalDate(props?.dueDate).date}</Text>
+                      </Group>
+                    )}
+
+                    {((taskList && reminder) || (props?.dueDate && reminder)) && circleIcon}
+
+                    {reminder && (
+                      <Group gap={5}>
+                        <IconBell size={ICON_SIZE - 6} stroke={2} />
+
+                        <Text
+                          inherit
+                        >{`${reminderDate?.date}, ${reminderDate?.time.toUpperCase()}`}</Text>
+                      </Group>
+                    )}
+
+                    {((taskList && recurringRule) ||
+                      (props?.dueDate && recurringRule) ||
+                      (reminder && recurringRule)) &&
+                      circleIcon}
+
+                    {recurringRule && (
+                      <Group gap={5}>
+                        <IconRepeat size={ICON_SIZE - 6} stroke={2} />
+
+                        <Text inherit>
+                          Every {recurringRule.interval == 1 ? '' : recurringRule.interval}{' '}
+                          {getFrequencyDetails(recurringRule.frequency as Frequency).label +
+                            (recurringRule.interval > 1 ? 's' : '')}
+                        </Text>
+                      </Group>
+                    )}
+
+                    {((taskList && props?.priority) ||
+                      (props?.dueDate && props?.priority) ||
+                      (reminder && props?.priority) ||
+                      (recurringRule && props?.priority)) &&
+                      circleIcon}
+
+                    {props?.priority && (
+                      <Group gap={5}>
+                        <Box c={`${priorityDetails.color}.6`}>
+                          <IconFlag size={ICON_SIZE - 6} stroke={2} />
+                        </Box>
+
+                        <Text inherit>{priorityDetails.label}</Text>
+                      </Group>
+                    )}
+                  </Group>
+                )}
+              </Stack>
+            </Box>
+          </GridCol>
+        </Grid>
+      </Card>
+    </Box>
+  );
+}
+
+export function AddTask({ options }: { options?: { adding?: boolean } }) {
+  const [adding, setAdding] = useState(options?.adding ?? false);
+  const { subViewValue } = useSubView();
+
+  useEffect(() => {
+    if (options?.adding !== undefined) return;
+    setAdding(false);
+  }, [subViewValue]);
+
+  return (
+    <Box>
+      <Box px={{ md: SECTION_SPACING - 8 }} display={!adding ? undefined : 'none'}>
+        <Divider variant="dashed" />
+      </Box>
+
+      {adding && (
+        <Card px={0} pt={8} bg={'transparent'} withBorder={options?.adding === undefined}>
+          <FormTask
+            onUnmount={setAdding}
+            options={{ withoutCheck: options?.adding !== undefined }}
+          />
+        </Card>
+      )}
+
+      <Box display={!adding ? undefined : 'none'} onClick={() => setAdding(true)}>
+        <TaskCard options={{ add: true }} />
+      </Box>
+    </Box>
+  );
+}

@@ -1,0 +1,90 @@
+import { useState } from 'react';
+import { FormValidateInput, useForm } from '@mantine/form';
+import { useNetwork } from '@mantine/hooks';
+import { Variant } from '@repo/types';
+import { useNotification } from './notification';
+
+type UseFormBaseOptions<TValues> = {
+  /** Called with parsed values after validation passes */
+  onSubmit: (
+    values: TValues,
+    options?: any,
+  ) => Promise<{ response?: Response; result?: any } | void>;
+  /** Optional close callback (eg. for modal) */
+  close?: () => void;
+  /** Reset form after successful submission */
+  resetOnSuccess?: boolean;
+  /** Hide success notification */
+  hideSuccessNotification?: boolean;
+  /** Called when an unexpected error occurs (e.g. fetch or runtime) */
+  onError?: (error: Error) => void;
+
+  clientOnly?: boolean;
+};
+
+export function useFormBase<TValues extends Record<string, any>>(
+  initialValues: TValues,
+  validate?: FormValidateInput<TValues>,
+  options?: UseFormBaseOptions<TValues>,
+) {
+  const [submitted, setSubmitted] = useState(false);
+  const networkStatus = useNetwork();
+
+  const form = useForm<TValues>({
+    initialValues,
+    validate,
+  });
+
+  const { showNotification } = useNotification();
+
+  const handleSubmit = async (params?: { options?: any }) => {
+    if (!form.isValid()) {
+      form.validate();
+
+      showNotification({
+        variant: Variant.WARNING,
+        title: 'Form Invalid',
+        desc: 'The form has one or more missing/incorrect fields.',
+      });
+      return;
+    }
+
+    if (!options?.clientOnly && !networkStatus.online) {
+      showNotification({
+        variant: Variant.WARNING,
+        title: 'Network Error',
+        desc: 'Please check your internet connection.',
+      });
+      return;
+    }
+
+    setSubmitted(true);
+    try {
+      const submit = await options?.onSubmit(form.values, params?.options);
+
+      if (options?.resetOnSuccess) form.reset();
+
+      options?.close?.();
+
+      if (!options?.hideSuccessNotification) {
+        showNotification({ variant: Variant.SUCCESS }, submit?.response, submit?.result);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unexpected error occurred';
+
+      showNotification({ variant: Variant.FAILED, desc: message });
+
+      options?.onError?.(err instanceof Error ? err : new Error(message));
+    } finally {
+      setSubmitted(false);
+    }
+  };
+
+  return {
+    form,
+    submitted,
+    handleSubmit,
+    reset: form.reset,
+    validate: form.validate,
+  };
+}

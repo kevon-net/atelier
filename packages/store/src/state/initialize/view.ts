@@ -1,0 +1,53 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useStoreView, ViewValue } from '../../state/view';
+import { getFromSessionStorage, saveToSessionStorage } from '@repo/utils';
+import { APP_NAMES_ATLAS, STORAGE_NAME } from '@repo/constants';
+
+interface UseViewInitializeParams {
+  initialView?: ViewValue;
+}
+
+export const useViewInitialize = (params?: UseViewInitializeParams) => {
+  const view = useStoreView((s) => s.view);
+  const setView = useStoreView((s) => s.setView);
+
+  // 1. Initialization Effect
+  useEffect(() => {
+    const sessionData = getFromSessionStorage(STORAGE_NAME.VIEW);
+
+    // Establish base defaults:
+    // Priorities: 1. Passed params -> 2. Session Storage -> 3. Fallback default
+    const resolvedView: ViewValue = params?.initialView ??
+      sessionData ?? {
+        view: null,
+        subView: null,
+        asideView: null,
+        navbarView: [
+          APP_NAMES_ATLAS.PAVE,
+          APP_NAMES_ATLAS.JOT,
+          APP_NAMES_ATLAS.STRIDE,
+          // APP_NAMES_ATLAS.PRIME,
+          // APP_NAMES_ATLAS.TALLY,
+        ],
+        tabsJotView: [],
+      };
+
+    // Sync to store
+    setView(resolvedView);
+
+    // Sync to sessionStorage
+    saveToSessionStorage(STORAGE_NAME.VIEW, resolvedView);
+
+    // We only want this to run once on component mount
+  }, [setView]);
+
+  // 2. Persistence Effect (Syncs store changes to sessionStorage)
+  useEffect(() => {
+    // Skip if the store hasn't been initialized yet
+    if (view === undefined) return;
+
+    saveToSessionStorage(STORAGE_NAME.VIEW, view);
+  }, [view]);
+};
