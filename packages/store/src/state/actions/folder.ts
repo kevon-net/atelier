@@ -4,9 +4,6 @@ import { useStoreSession } from '../session';
 import { FolderGet } from '@repo/types';
 import { SyncStatus } from '@repo/types';
 import { generateCopyTitle, generateUUID } from '@repo/utils';
-import { useStoreCalendar } from '../calendar';
-import { useStoreNote } from '../note';
-import { useStoreTaskList } from '../task-list';
 import { useStoreActiveItems } from '../active-items';
 
 export const useFolderActions = () => {
@@ -16,12 +13,6 @@ export const useFolderActions = () => {
   const updateFolder = useStoreFolder((s) => s.updateFolder);
   const deleteFolder = useStoreFolder((s) => s.deleteFolder);
 
-  const calendars = useStoreCalendar((s) => s.calendars);
-  const setCalendars = useStoreCalendar((s) => s.setCalendars);
-  const notes = useStoreNote((s) => s.notes);
-  const setNotes = useStoreNote((s) => s.setNotes);
-  const taskLists = useStoreTaskList((s) => s.taskLists);
-  const setTaskLists = useStoreTaskList((s) => s.setTaskLists);
   const activeWorkspace = useStoreActiveItems((s) => s.activeItems?.workspace);
 
   const folderCreate = (params: Omit<Partial<FolderGet>, 'type'>) => {
@@ -81,29 +72,29 @@ export const useFolderActions = () => {
       updateFunction: () => {},
     };
 
-    switch (folderLocation) {
-      case APP_NAMES_ATLAS.PAVE:
-        locationProps = {
-          relatedItems: calendars || [],
-          updateFunction: (ci: any[]) => setCalendars(ci),
-        };
-        break;
-      case APP_NAMES_ATLAS.JOT:
-        locationProps = {
-          relatedItems: notes || [],
-          updateFunction: (ni: any[]) => setNotes(ni),
-        };
-        break;
-      case APP_NAMES_ATLAS.STRIDE:
-        locationProps = {
-          relatedItems: taskLists || [],
-          updateFunction: (tl: any[]) => setTaskLists(tl),
-        };
-        break;
+    // switch (folderLocation) {
+    //   case APP_NAMES_ATLAS.PAVE:
+    //     locationProps = {
+    //       relatedItems: calendars || [],
+    //       updateFunction: (ci: any[]) => setCalendars(ci),
+    //     };
+    //     break;
+    //   case APP_NAMES_ATLAS.JOT:
+    //     locationProps = {
+    //       relatedItems: notes || [],
+    //       updateFunction: (ni: any[]) => setNotes(ni),
+    //     };
+    //     break;
+    //   case APP_NAMES_ATLAS.STRIDE:
+    //     locationProps = {
+    //       relatedItems: taskLists || [],
+    //       updateFunction: (tl: any[]) => setTaskLists(tl),
+    //     };
+    //     break;
 
-      default:
-        break;
-    }
+    //   default:
+    //     break;
+    // }
 
     const now = new Date();
 

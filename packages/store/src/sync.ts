@@ -3,36 +3,14 @@ import { useIdle, UserNetworkReturnValue } from '@mantine/hooks';
 import { config } from './indexed-db/config';
 import { openDatabase } from './indexed-db/actions';
 import { Database, DatabaseError } from './indexed-db/transactions';
-
 import { COOKIE_NAME, getClientApiUrl, STORE_NAME } from '@repo/constants';
 import { SyncParams, SyncStatus } from '@repo/types';
-import {
-  eventsUpdate,
-  workspacesUpdate,
-  notesUpdate,
-  linksUpdate,
-  calendarsUpdate,
-  taskListsUpdate,
-  recurringRulesUpdate,
-  tasksUpdate,
-  remindersUpdate,
-  foldersUpdate,
-} from '@repo/handlers';
-
+import { workspacesUpdate, foldersUpdate } from '@repo/handlers';
 import { SessionValue, useStoreSession } from './state/session';
-import { useStoreNote } from './state/note';
-import { useStoreLink } from './state/link';
 import { SyncStatusValue } from './state/sync-status';
 import { useStoreWorkspace } from './state/workspace';
-import { useStoreEvent } from './state/event';
-import { useStoreCalendar } from './state/calendar';
-import { useStoreTaskList } from './state/task-list';
-import { useStoreRecurringRule } from './state/recurring-rule';
-import { useStoreTask } from './state/task';
-import { useStoreReminder } from './state/reminder';
 import { useStoreFolder } from './state/folder';
 import { useNetworkSync } from './state/sync/network';
-import { useStoreActiveItems } from './state/active-items';
 import { getCookieClient } from '@repo/utils';
 
 type SyncStoreConfig<TItems = any, THookReturn = any> = {
@@ -65,84 +43,6 @@ export const SYNC_STORES: Record<string, SyncStoreConfig> = {
     setItems: (store, items) => store.setWorkspaces(items),
     clearDeleted: (store) => store.clearDeletedWorkspaces(),
   },
-
-  // Pave
-  [STORE_NAME.CALENDARS]: {
-    dataStore: STORE_NAME.CALENDARS,
-    useStoreHook: useStoreCalendar,
-    serverUpdate: calendarsUpdate,
-    getItems: (store) => store.calendars,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setCalendars(items),
-    clearDeleted: (store) => store.clearDeletedCalendars(),
-  },
-  [STORE_NAME.EVENTS]: {
-    dataStore: STORE_NAME.EVENTS,
-    useStoreHook: useStoreEvent,
-    serverUpdate: eventsUpdate,
-    getItems: (store) => store.events,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setEvents(items),
-    clearDeleted: (store) => store.clearDeletedEvents(),
-  },
-
-  // Jot
-  [STORE_NAME.NOTES]: {
-    dataStore: STORE_NAME.NOTES,
-    useStoreHook: useStoreNote,
-    serverUpdate: notesUpdate,
-    getItems: (store) => store.notes,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setNotes(items),
-    clearDeleted: (store) => store.clearDeletedNotes(),
-  },
-  [STORE_NAME.LINKS]: {
-    dataStore: STORE_NAME.LINKS,
-    useStoreHook: useStoreLink,
-    serverUpdate: linksUpdate,
-    getItems: (store) => store.links,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setLinks(items),
-    clearDeleted: (store) => store.clearDeletedLinks(),
-  },
-
-  // Stride
-  [STORE_NAME.TASK_LISTS]: {
-    dataStore: STORE_NAME.TASK_LISTS,
-    useStoreHook: useStoreTaskList,
-    serverUpdate: taskListsUpdate,
-    getItems: (store) => store.taskLists,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setTaskLists(items),
-    clearDeleted: (store) => store.clearDeletedTaskLists(),
-  },
-  [STORE_NAME.RECURRING_RULES]: {
-    dataStore: STORE_NAME.RECURRING_RULES,
-    useStoreHook: useStoreRecurringRule,
-    serverUpdate: recurringRulesUpdate,
-    getItems: (store) => store.recurringRules,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setRecurringRules(items),
-    clearDeleted: (store) => store.clearDeletedRecurringRules(),
-  },
-  [STORE_NAME.TASKS]: {
-    dataStore: STORE_NAME.TASKS,
-    useStoreHook: useStoreTask,
-    serverUpdate: tasksUpdate,
-    getItems: (store) => store.tasks,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setTasks(items),
-    clearDeleted: (store) => store.clearDeletedTasks(),
-  },
-  [STORE_NAME.REMINDERS]: {
-    dataStore: STORE_NAME.REMINDERS,
-    useStoreHook: useStoreReminder,
-    serverUpdate: remindersUpdate,
-    getItems: (store) => store.reminders,
-    getDeleted: (store) => store.deleted,
-    setItems: (store, items) => store.setReminders(items),
-    clearDeleted: (store) => store.clearDeletedReminders(),
-  },
 } as const;
 
 type SyncStoreKey = keyof typeof SYNC_STORES;
@@ -158,72 +58,12 @@ const SYNC_REGISTRY: Record<SyncStoreKey, any> = {
     updateState: (items: any) => useStoreFolder.getState().mergeFolders(items),
     clearDeleted: () => useStoreFolder.getState().clearDeletedFolders(),
   },
-
-  // Pave
-  [STORE_NAME.CALENDARS]: {
-    store: useStoreCalendar,
-    updateState: (items: any) => useStoreCalendar.getState().mergeCalendars(items),
-    clearDeleted: () => useStoreCalendar.getState().clearDeletedCalendars(),
-  },
-  [STORE_NAME.EVENTS]: {
-    store: useStoreEvent,
-    updateState: (items: any) => useStoreEvent.getState().mergeEvents(items),
-    clearDeleted: () => useStoreEvent.getState().clearDeletedEvents(),
-  },
-
-  // Jot
-  [STORE_NAME.NOTES]: {
-    store: useStoreNote,
-    updateState: (items: any) => useStoreNote.getState().mergeNotes(items),
-    clearDeleted: () => useStoreNote.getState().clearDeletedNotes(),
-  },
-  [STORE_NAME.LINKS]: {
-    store: useStoreLink,
-    updateState: (items: any) => useStoreLink.getState().mergeLinks(items),
-    clearDeleted: () => useStoreLink.getState().clearDeletedLinks(),
-  },
-
-  // Stride
-  [STORE_NAME.TASK_LISTS]: {
-    store: useStoreTaskList,
-    updateState: (items: any) => useStoreTaskList.getState().mergeTaskLists(items),
-    clearDeleted: () => useStoreTaskList.getState().clearDeletedTaskLists(),
-  },
-  [STORE_NAME.RECURRING_RULES]: {
-    store: useStoreRecurringRule,
-    updateState: (items: any) => useStoreRecurringRule.getState().mergeRecurringRules(items),
-    clearDeleted: () => useStoreRecurringRule.getState().clearDeletedRecurringRules(),
-  },
-  [STORE_NAME.TASKS]: {
-    store: useStoreTask,
-    updateState: (items: any) => useStoreTask.getState().mergeTasks(items),
-    clearDeleted: () => useStoreTask.getState().clearDeletedTasks(),
-  },
-  [STORE_NAME.REMINDERS]: {
-    store: useStoreReminder,
-    updateState: (items: any) => useStoreReminder.getState().mergeReminders(items),
-    clearDeleted: () => useStoreReminder.getState().clearDeletedReminders(),
-  },
 };
 
 // Define a shape for the payload
 export interface MergedSyncPayload {
   [STORE_NAME.WORKSPACES]?: { items: any[]; deleted: any[] };
   [STORE_NAME.FOLDERS]?: { items: any[]; deleted: any[] };
-
-  // Pave
-  [STORE_NAME.CALENDARS]?: { items: any[]; deleted: any[] };
-  [STORE_NAME.EVENTS]?: { items: any[]; deleted: any[] };
-
-  // Jot
-  [STORE_NAME.NOTES]?: { items: any[]; deleted: any[] };
-  [STORE_NAME.LINKS]?: { items: any[]; deleted: any[] };
-
-  // Stride
-  [STORE_NAME.TASK_LISTS]?: { items: any[]; deleted: any[] };
-  [STORE_NAME.RECURRING_RULES]?: { items: any[]; deleted: any[] };
-  [STORE_NAME.TASKS]?: { items: any[]; deleted: any[] };
-  [STORE_NAME.REMINDERS]?: { items: any[]; deleted: any[] };
 }
 
 // Update the MergedSyncParams to handle multiple datasets
@@ -260,14 +100,6 @@ export const useMergedSync = (params: {
     const stores = {
       [STORE_NAME.WORKSPACES]: useStoreWorkspace.getState(),
       [STORE_NAME.FOLDERS]: useStoreFolder.getState(),
-      [STORE_NAME.CALENDARS]: useStoreCalendar.getState(),
-      [STORE_NAME.EVENTS]: useStoreEvent.getState(),
-      [STORE_NAME.NOTES]: useStoreNote.getState(),
-      [STORE_NAME.LINKS]: useStoreLink.getState(),
-      [STORE_NAME.TASK_LISTS]: useStoreTaskList.getState(),
-      [STORE_NAME.RECURRING_RULES]: useStoreRecurringRule.getState(),
-      [STORE_NAME.TASKS]: useStoreTask.getState(),
-      [STORE_NAME.REMINDERS]: useStoreReminder.getState(),
     };
 
     const payload: MergedSyncPayload = {};

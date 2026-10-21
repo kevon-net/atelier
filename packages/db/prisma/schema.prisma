@@ -30,45 +30,6 @@ enum SyncStatus {
   DELETED
 }
 
-enum TaskStatus {
-  TODO
-  IN_PROGRESS
-  DONE
-}
-
-enum EntityType {
-  TASK
-  EVENT
-  NOTE
-  TRANSACTION
-}
-
-enum MetricType {
-  NUMBER
-  CURRENCY
-  DURATION
-  BOOLEAN
-}
-
-enum TransactionType {
-  INCOME
-  EXPENSE
-}
-
-enum Priority {
-  URGENT_IMPORTANT
-  NOT_URGENT_IMPORTANT
-  URGENT_UNIMPORTANT
-  NOT_URGENT_UNIMPORTANT
-}
-
-enum Frequency {
-  DAILY
-  WEEKLY
-  MONTHLY
-  ANNUALLY
-}
-
 //
 // CORE
 //
@@ -162,15 +123,7 @@ model Workspace {
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String  @map("account_id")
 
-  events         Event[]
-  notes          Note[]
-  links          Link[]
-  calendars      Calendar[]
-  taskLists      TaskList[]
-  tasks          Task[]
-  recurringRules RecurringRule[]
-  reminders      Reminder[]
-  folders        Folder[]
+  folders Folder[]
 
   syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
@@ -193,188 +146,10 @@ model Folder {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String    @map("workspace_id")
 
-  calendars Calendar[]
-  notes     Note[]
-  taskLists TaskList[]
-
   syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("folders")
-}
-
-model Reminder {
-  id       String   @id @default(uuid())
-  remindAt DateTime @map("remind_at")
-  sent     Boolean  @default(false)
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-  task        Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  taskId      String?   @map("task_id")
-  event       Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId     String?   @map("event_id")
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map(name: "reminders")
-}
-
-model RecurringRule {
-  id        String    @id @default(uuid())
-  frequency Frequency
-  interval  Int       @default(1)
-  endDate   DateTime? @map("end_date")
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-
-  events Event[]
-  tasks  Task[]
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map(name: "recurring_rules")
-}
-
-model Calendar {
-  id          String  @id @default(cuid())
-  title       String
-  description String?
-  color       String?
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-  folder      Folder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
-  folderId    String?   @map("folder_id")
-
-  events Event[]
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("calendars")
-}
-
-model Event {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  start       DateTime
-  end         DateTime
-  allDay      Boolean  @default(false) @map("all_day")
-  location    String?
-
-  workspace       Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId     String         @map("workspace_id")
-  calendar        Calendar?      @relation(fields: [calendarId], references: [id], onDelete: SetNull)
-  calendarId      String?        @map("calendar_id")
-  recurringRule   RecurringRule? @relation(fields: [recurringRuleId], references: [id])
-  recurringRuleId String?        @map("recurring_rule_id")
-
-  reminders Reminder[]
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("events")
-}
-
-model Note {
-  id      String  @id @default(uuid())
-  title   String
-  content String?
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-  folder      Folder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
-  folderId    String?   @map("folder_id")
-
-  linksFrom Link[] @relation("FromLinks") // for outgoing links
-  linksTo   Link[] @relation("ToLinks") // for incoming links (backlinks)
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map(name: "notes")
-}
-
-model Link {
-  id String @id @default(uuid())
-
-  from   Note   @relation("FromLinks", fields: [fromId], references: [id], onDelete: Cascade)
-  fromId String @map("from_id")
-  to     Note   @relation("ToLinks", fields: [toId], references: [id], onDelete: Cascade)
-  toId   String @map("to_id")
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([fromId, toId]) // to avoid duplicate links
-  @@map(name: "links")
-}
-
-model TaskList {
-  id          String  @id @default(cuid())
-  title       String
-  description String?
-  color       String?
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
-  folder      Folder?   @relation(fields: [folderId], references: [id], onDelete: SetNull)
-  folderId    String?   @map("folder_id")
-
-  tasks Task[]
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("task_lists")
-}
-
-model Task {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  dueDate     DateTime? @map("due_date")
-  complete    Boolean   @default(false)
-  priority    Priority  @default(NOT_URGENT_UNIMPORTANT)
-
-  workspace       Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId     String         @map("workspace_id")
-  taskList        TaskList?      @relation(fields: [taskListId], references: [id], onDelete: SetNull)
-  taskListId      String?        @map("task_list_id")
-  recurringRule   RecurringRule? @relation(fields: [recurringRuleId], references: [id])
-  recurringRuleId String?        @map("recurring_rule_id")
-
-  reminders Reminder[]
-
-  syncStatus SyncStatus @default(SYNCED) @map("sync_status")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("tasks")
 }

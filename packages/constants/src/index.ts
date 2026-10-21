@@ -1,7 +1,5 @@
 export * from './configs/next';
 export * from './configs/postcss';
-export * from './app';
-export * from './audios';
 export * from './colors';
 export * from './icons';
 export * from './images';
@@ -10,9 +8,10 @@ export * from './other';
 export * from './redirects';
 export * from './routes';
 export * from './sizes';
-export * from './seed';
-export * from './theme';
 export * from './paths';
 export * from './paths-client';
 export * from './paths-server';
 export * from './time';
+
+export * from './theme';
+export * from './app';

@@ -17,20 +17,6 @@ const WITH_BODY: HeadersInit = {
 
 export const HEADERS = { WITHOUT_BODY, WITH_BODY };
 
-export const COLOR_CODES = {
-  FOOD: {
-    CARBS: colors[0]?.colorName,
-    PROTEINS: colors[1]?.colorName,
-    FATS: colors[2]?.colorName,
-    KCAL: colors[3]?.colorName,
-  },
-  MASSES: {
-    FAT: colors[4]?.colorName,
-    MUSCLE: colors[5]?.colorName,
-    BMI: colors[6]?.colorName,
-  },
-};
-
 export const TIME_FORMAT = {
   LOCALE: 'en-GB',
 };

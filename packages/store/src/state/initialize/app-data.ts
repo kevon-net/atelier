@@ -4,17 +4,9 @@ import { useEffect } from 'react';
 import { STORE_NAME } from '@repo/constants';
 import { useStoreWorkspace } from '../workspace';
 import { SessionValue, useStoreSession } from '../session';
-import { useStoreNote } from '../note';
-import { useStoreEvent } from '../event';
-import { useStoreLink } from '../link';
 import { openDatabase } from '../../indexed-db/actions';
 import { config } from '../../indexed-db/config';
 import { FileSyncAdapter, SyncStatus } from '@repo/types';
-import { useStoreCalendar } from '../calendar';
-import { useStoreTaskList } from '../task-list';
-import { useStoreTask } from '../task';
-import { useStoreRecurringRule } from '../recurring-rule';
-import { useStoreReminder } from '../reminder';
 import { useStoreFolder } from '../folder';
 import { useStoreAccount } from '../account';
 
@@ -142,52 +134,6 @@ export const LOAD_STORES: Record<string, LoadStoreConfig> = {
     useStoreHook: useStoreFolder,
     setState: (store, items) => store.setFolders(items),
   },
-
-  // Pave
-  [STORE_NAME.CALENDARS]: {
-    dataStore: STORE_NAME.CALENDARS,
-    useStoreHook: useStoreCalendar,
-    setState: (store, items) => store.setCalendars(items),
-  },
-  [STORE_NAME.EVENTS]: {
-    dataStore: STORE_NAME.EVENTS,
-    useStoreHook: useStoreEvent,
-    setState: (store, items) => store.setEvents(items),
-  },
-
-  // Jot
-  [STORE_NAME.NOTES]: {
-    dataStore: STORE_NAME.NOTES,
-    useStoreHook: useStoreNote,
-    setState: (store, items) => store.setNotes(items),
-  },
-  [STORE_NAME.LINKS]: {
-    dataStore: STORE_NAME.LINKS,
-    useStoreHook: useStoreLink,
-    setState: (store, items) => store.setLinks(items),
-  },
-
-  // Stride
-  [STORE_NAME.TASK_LISTS]: {
-    dataStore: STORE_NAME.TASK_LISTS,
-    useStoreHook: useStoreTaskList,
-    setState: (store, items) => store.setTaskLists(items),
-  },
-  [STORE_NAME.RECURRING_RULES]: {
-    dataStore: STORE_NAME.RECURRING_RULES,
-    useStoreHook: useStoreRecurringRule,
-    setState: (store, items) => store.setRecurringRules(items),
-  },
-  [STORE_NAME.TASKS]: {
-    dataStore: STORE_NAME.TASKS,
-    useStoreHook: useStoreTask,
-    setState: (store, items) => store.setTasks(items),
-  },
-  [STORE_NAME.REMINDERS]: {
-    dataStore: STORE_NAME.REMINDERS,
-    useStoreHook: useStoreReminder,
-    setState: (store, items) => store.setReminders(items),
-  },
 } as const;
 
 type LoadStoreKey = keyof typeof LOAD_STORES;
@@ -204,20 +150,6 @@ export const useLoadAppData = (options: {
     [STORE_NAME.ACCOUNTS]: useStoreAccount(),
     [STORE_NAME.WORKSPACES]: useStoreWorkspace(),
     [STORE_NAME.FOLDERS]: useStoreFolder(),
-
-    // Pave
-    [STORE_NAME.CALENDARS]: useStoreCalendar(),
-    [STORE_NAME.EVENTS]: useStoreEvent(),
-
-    // Jot
-    [STORE_NAME.NOTES]: useStoreNote(),
-    [STORE_NAME.LINKS]: useStoreLink(),
-
-    // Stride
-    [STORE_NAME.TASK_LISTS]: useStoreTaskList(),
-    [STORE_NAME.RECURRING_RULES]: useStoreRecurringRule(),
-    [STORE_NAME.TASKS]: useStoreTask(),
-    [STORE_NAME.REMINDERS]: useStoreReminder(),
   };
 
   useEffect(() => {

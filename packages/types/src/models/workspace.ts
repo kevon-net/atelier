@@ -12,6 +12,6 @@ export type WorkspaceGet = Workspace;
 // Type for fetched item with relations
 export type WorkspaceRelations = Prisma.WorkspaceGetPayload<{
   include: {
-    _count: { select: { notes: true } };
+    _count: { select: { folders: true } };
   };
 }>;

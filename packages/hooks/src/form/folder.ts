@@ -4,7 +4,6 @@ import { useFormBase } from '../form';
 import { FolderGet } from '@repo/types';
 import { useAppshellChild } from '../appshell';
 import { getUniqueColor } from '@repo/constants';
-import { useViewModal } from '@repo/store';
 
 export type FormFolderValues = {
   id: string;
@@ -21,8 +20,6 @@ export const useFormFolder = (params?: {
   const { handleToggleChildAside } = useAppshellChild();
 
   const { folderCreate, folderUpdate } = useFolderActions();
-
-  const { closeModalView } = useViewModal();
 
   const { form, submitted, handleSubmit } = useFormBase<Partial<FolderGet>>(
     {
@@ -52,17 +49,17 @@ export const useFormFolder = (params?: {
           } as FolderGet);
         }
 
-        if (!params?.defaultValues?.updatedAt) {
-          if (params?.options?.closeWhenDone) {
-            if (!!appshell) {
-              if (appshell.child.aside == true) {
-                handleToggleChildAside();
-              }
-            }
-          }
-        } else {
-          closeModalView();
-        }
+        // if (!params?.defaultValues?.updatedAt) {
+        //   if (params?.options?.closeWhenDone) {
+        //     if (!!appshell) {
+        //       if (appshell.child.aside == true) {
+        //         handleToggleChildAside();
+        //       }
+        //     }
+        //   }
+        // } else {
+        //   closeModalView();
+        // }
       },
     },
   );

@@ -52,36 +52,6 @@ export const STORE_NAME = {
   SESSIONS: 'sessions',
   WORKSPACES: 'workspaces',
   FOLDERS: 'folders',
-
-  ACCOUNT_GROUPS: 'accountGroups',
-  BUDGETS: 'budgets',
-  TRANSACTIONS: 'transactions',
-
-  // Pave
-  CALENDARS: 'calendars',
-  EVENTS: 'events',
-
-  FOODS: 'foods',
-  MEALS: 'meals',
-  SERVINGS: 'servings',
-  EATS: 'eats',
-  MASSES: 'masses',
-
-  // Jot
-  NOTES: 'notes',
-  LINKS: 'links',
-
-  CHATS: 'chats',
-  CHAT_MESSAGES: 'chatMessages',
-  CUSTOMIZATIONS: 'customizations',
-
-  // Stride
-  TASK_LISTS: 'taskLists',
-  RECURRING_RULES: 'recurringRules',
-  TASKS: 'tasks',
-  REMINDERS: 'reminders',
-  VIEWS: 'views',
-  NOTIFICATIONS: 'notifications',
 };
 
 export const DEFAULT_NAMES = {

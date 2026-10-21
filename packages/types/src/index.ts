@@ -11,17 +11,9 @@ export * from './sync';
 export * from './view';
 
 export * from './models/account';
-export * from './models/calendar';
 export * from './models/enums';
-export * from './models/event';
 export * from './models/folder';
-export * from './models/link';
-export * from './models/note';
 export * from './models/profile';
-export * from './models/recurring-rule';
-export * from './models/reminder';
 export * from './models/session';
-export * from './models/task-list';
-export * from './models/task';
 export * from './models/user';
 export * from './models/workspace';

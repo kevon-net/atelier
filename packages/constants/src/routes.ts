@@ -8,7 +8,7 @@ export const authRoutes = [
 
 export const protectedRoutes = [
   // '/',
-  // Add other protected routes
+  // // Add other protected routes
 ];
 
 export const ignoredRoutes = [
