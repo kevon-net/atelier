@@ -16,7 +16,6 @@
   "dependencies": {
     "@mantine/form": "^9.4.2",
     "@mantine/hooks": "^9.4.2",
-    "@mantine/notifications": "^9.4.2",
     "@repo/auth": "workspace:*",
     "@repo/constants": "workspace:*",
     "@repo/cloudbase": "workspace:*",
@@ -30,6 +29,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@repo/config": "workspace:*",

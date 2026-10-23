@@ -1,6 +1,5 @@
-import { PARAM_NAME } from '@repo/constants';
+import { URL_PARAM_NAME } from '@repo/constants';
 import { capitalizeWords } from './string';
-import { authRoutes, ignoredAuthRoutes, ignoredRoutes, protectedRoutes } from '@repo/constants';
 
 /**
  * Appends a redirect query parameter to a target URL
@@ -12,7 +11,7 @@ export const setRedirectUrl = (params: {
 }) => {
   const target = params.targetUrl;
   const redirect = params.redirectUrl || '';
-  const paramName = params.redirectParamName || PARAM_NAME.REDIRECT;
+  const paramName = params.redirectParamName || URL_PARAM_NAME.REDIRECT;
 
   return `${target}?${paramName}=${encodeURIComponent(redirect)}`;
 };

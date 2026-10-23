@@ -1,18 +1,69 @@
 import { create } from 'zustand';
-import { AppShell } from '@repo/types';
+
+export type AppShellChild = {
+  navbar: boolean;
+  aside: boolean;
+};
+
+export type AppShell = {
+  navbar: boolean;
+  aside: boolean;
+  child: AppShellChild;
+};
 
 export type AppShellValue = AppShell | null | undefined;
 
 interface AppShellState {
   appshell: AppShellValue;
-  toggleNavbarChild: () => void;
-  toggleAsideChild: () => void;
   setAppShell: (data: AppShellValue) => void;
   clearAppShell: () => void;
+
+  toggleNavbar: () => void;
+  toggleAside: () => void;
+  toggleNavbarChild: () => void;
+  toggleAsideChild: () => void;
 }
 
-export const useStoreAppShell = create<AppShellState>((set) => ({
+export const useStoreAppshell = create<AppShellState>((set) => ({
   appshell: undefined,
+
+  setAppShell: (data) => {
+    set((state) => {
+      return { appshell: data };
+    });
+  },
+
+  clearAppShell: () => {
+    set(() => {
+      return { appshell: null };
+    });
+  },
+
+  toggleNavbar: () => {
+    set((state) => {
+      if (!state.appshell) return state;
+
+      return {
+        appshell: {
+          ...state.appshell,
+          navbar: !state.appshell?.child?.navbar,
+        },
+      };
+    });
+  },
+
+  toggleAside: () => {
+    set((state) => {
+      if (!state.appshell) return state;
+
+      return {
+        appshell: {
+          ...state.appshell,
+          aside: !state.appshell?.child?.aside,
+        },
+      };
+    });
+  },
 
   toggleNavbarChild: () => {
     set((state) => {
@@ -43,18 +94,6 @@ export const useStoreAppShell = create<AppShellState>((set) => ({
           },
         },
       };
-    });
-  },
-
-  setAppShell: (data) => {
-    set((state) => {
-      return { appshell: data };
-    });
-  },
-
-  clearAppShell: () => {
-    set(() => {
-      return { appshell: null };
     });
   },
 }));

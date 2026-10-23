@@ -1,7 +1,4 @@
-import { NextConfig } from 'next';
-
-export const next: NextConfig = {
-  /* config options here */
+export const next = {
   images: {
     qualities: [25, 50, 75, 100],
     unoptimized: true,

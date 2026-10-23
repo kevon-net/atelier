@@ -18,10 +18,9 @@ export function LoaderMain() {
       <Transition mounted={mounted}>
         {(styles) => (
           <div style={styles}>
-            <Text inherit fz={'xs'} ta={'center'}>
-              This is taking longer than expected
-              <br />
-              you might be on a slow network
+            <Text inherit fz={'xs'} ta={'center'} c={'dimmed'}>
+              This is taking longer than expected, <br />
+              you might be on a slow network.
             </Text>
           </div>
         )}

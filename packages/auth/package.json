@@ -16,9 +16,6 @@
   "dependencies": {
     "@repo/cloudbase": "workspace:*",
     "@repo/constants": "workspace:*",
-    "@repo/handlers": "workspace:*",
-    "@repo/db": "workspace:*",
-    "@repo/email": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/utils": "workspace:*"
   },

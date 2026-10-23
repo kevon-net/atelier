@@ -14,14 +14,13 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.2.10",
     "@repo/cloudbase": "workspace:*",
-    "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/utils": "workspace:*",
     "@repo/constants": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^20",
     "@repo/config": "workspace:*",
     "typescript": "^5.6.2"
   }

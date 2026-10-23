@@ -23,6 +23,7 @@
     "@repo/auth": "workspace:*",
     "@repo/cloudbase": "workspace:*",
     "@repo/constants": "workspace:*",
+    "@repo/notifications": "workspace:*",
     "@repo/handlers": "workspace:*",
     "@repo/hooks": "workspace:*",
     "@repo/store": "workspace:*",
@@ -35,6 +36,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@types/node": "^20",
     "@repo/config": "workspace:*",
     "@types/react": "^19",
     "@types/react-dom": "^19",

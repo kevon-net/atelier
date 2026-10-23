@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//
+// ENUMS
+//
+
+enum Role {
+  USER
+  ADMIN
+  DEV
+}
+
+// enum SyncStatus {
+//   PENDING
+//   SYNCED
+//   SAVED
+//   ERROR
+//   DELETED
+// }
+
+//
+// CORE
+//
+
+model Profile {
+  id         String  @id @default(cuid())
+  email      String
+  name       String?
+  userName   String? @map("user_name")
+  avatar     String?
+  customized Boolean @default(false)
+
+  sessions   Session[]
+  workspaces Workspace[]
+  inquiries  Inquiry[]
+
+  // syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([email])
+  @@unique([userName])
+  @@map("profiles")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime @map("expires_at")
+  otp       String?
+
+  // additional data that might change per session, or during a session
+  timezone String?
+
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String  @map("profile_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sessions")
+}
+
+//
+// APP DATA
+//
+
+model Workspace {
+  id   String @id @default(cuid())
+  name String
+
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String  @map("profile_id")
+
+  folders Folder[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("workspaces")
+}
+
+model Folder {
+  id       String  @id @default(cuid())
+  name     String
+  location String
+  folderId String? @map("folder_id") // points to parent folder
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String    @map("workspace_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("folders")
+}
+
+model Inquiry {
+  id      String @id @default(cuid())
+  name    String
+  email   String
+  subject String
+  message String
+
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("inquiries")
+}

@@ -1,11 +1,6 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-import { ColorScheme } from '@repo/types';
-import { colors } from './colors';
-
-export const DEFAULT_COLOR_SCHEME: ColorScheme = ColorScheme.AUTO;
-
 const WITHOUT_BODY: HeadersInit = {
   Accept: 'application/json',
 };

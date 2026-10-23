@@ -1,5 +1,8 @@
 import { create } from 'zustand';
-import { Network } from '@repo/types';
+
+export type Network = {
+  online: boolean;
+};
 
 export type NetworkValue = Network | undefined;
 
@@ -7,6 +10,8 @@ interface NetworkState {
   network: NetworkValue;
   setNetwork: (data: NetworkValue) => void;
   clearNetwork: () => void;
+
+  setOnline: (data: Network['online']) => void;
 }
 
 export const useStoreNetwork = create<NetworkState>((set) => ({
@@ -18,5 +23,11 @@ export const useStoreNetwork = create<NetworkState>((set) => ({
 
   clearNetwork: () => {
     set({ network: undefined });
+  },
+
+  setOnline: (data) => {
+    set((state) => {
+      return { network: { ...state, online: data } };
+    });
   },
 }));

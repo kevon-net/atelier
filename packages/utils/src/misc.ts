@@ -1,4 +1,3 @@
-import { DEFAULT_COLOR_SCHEME } from '@repo/constants';
 import { ColorScheme } from '@repo/types';
 
 /**
@@ -23,10 +22,11 @@ let darkQuery: MediaQueryList | null = null;
 
 export const getOSTheme = (
   colorScheme: ColorScheme,
+  defaultColorScheme: ColorScheme,
   options?: { inServer?: boolean },
 ): ColorScheme => {
   if (typeof window === 'undefined')
-    return options?.inServer ? ColorScheme.DARK : DEFAULT_COLOR_SCHEME;
+    return options?.inServer ? ColorScheme.DARK : defaultColorScheme;
   if (colorScheme !== 'auto') return colorScheme;
 
   // Cache the query object
