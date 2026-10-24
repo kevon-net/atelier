@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, JetBrains_Mono } from 'next/font/google';
 import { ProviderMantine } from '@repo/ui';
-import { ColorSchemeScript, MantineColorScheme, mantineHtmlProps } from '@mantine/core';
-import { ColorScheme } from '@repo/types';
+import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import { APP_DESC, APP_NAME } from '@savour/constants/app';
 import { mantineTheme } from '@savour/theme';
 import { getAppResolver } from '@savour/resolver';
@@ -14,11 +13,16 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 // ‼️ import schedule styles after core and dates package styles
 import '@mantine/schedule/styles.css';
-import { mantineTheme } from '@savour/theme';
-import { getAppResolver } from '@savour/resolver';
+
+import './globals.css';
 
 const fontDefault = Geist({
   variable: '--font-default',
+  subsets: ['latin'],
+});
+
+const fontDefaultHeading = JetBrains_Mono({
+  variable: '--font-default-heading',
   subsets: ['latin'],
 });
 
@@ -39,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       {...mantineHtmlProps}
       data-mantine-color-scheme={DEFAULT_COLOR_SCHEME}
       suppressHydrationWarning
-      className={`${fontDefault.variable} ${fontDefaultMono.variable}`}
+      className={`${fontDefault.variable} ${fontDefaultHeading.variable} ${fontDefaultMono.variable}`}
     >
       <head>
         <meta charSet="UTF-8" />

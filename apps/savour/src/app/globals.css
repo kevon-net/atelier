@@ -22,8 +22,6 @@ body {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  line-height: var(--mantine-line-height);
-  font-family: var(--font-default);
   font-size: var(--mantine-font-size-md);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

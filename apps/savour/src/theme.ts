@@ -1,29 +1,41 @@
 'use client';
 
-import { MantineThemeOverride } from '@mantine/core';
+import { MantineThemeOverride, Text } from '@mantine/core';
+import classes from './theme.module.css';
 
 export const mantineTheme: MantineThemeOverride = {
-  // colors: {
-  //   pri: [
-  //     '#fef4e8',
-  //     '#f2e7dc',
-  //     '#decebc',
-  //     '#cbb399',
-  //     '#ba9c7b',
-  //     '#b08e67',
-  //     '#ac865c', // src (6)
-  //     '#97734b',
-  //     '#876640',
-  //     '#775732',
-  //   ],
-  // },
+  colors: {
+    pri: [
+      '#f7f3e6',
+      '#e1dbce',
+      '#cbc3b3',
+      '#b5ab96',
+      '#a09379',
+      '#877960',
+      '#695e4a', // src (6)
+      '#4b4334',
+      '#2e281d',
+      '#150c00',
+    ],
+  },
 
-  primaryColor: 'blue',
-  defaultRadius: 'md',
-  primaryShade: { light: 6, dark: 6 },
+  primaryColor: 'pri',
+  defaultRadius: 'sm',
+  primaryShade: { light: 5, dark: 5 },
+  luminanceThreshold: 0.3,
   cursorType: 'pointer',
+  activeClassName: classes.active,
 
-  headings: {
-    fontFamily: 'var(--font-geist-sans)',
+  headings: { fontFamily: 'var(--font-default-heading)' },
+  fontFamily: 'var(--font-default)',
+  fontFamilyMonospace: 'var(--font-default-mono)',
+  fontWeights: { medium: '500' },
+
+  components: {
+    Text: Text.extend({
+      defaultProps: {
+        inherit: true,
+      },
+    }),
   },
 };
