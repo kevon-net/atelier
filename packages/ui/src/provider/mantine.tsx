@@ -18,7 +18,7 @@ import { ColorScheme } from '@repo/types';
 export interface ProviderMantineProps {
   appName?: string;
   colorScheme?: MantineColorScheme;
-  defaultColorScheme?: ColorScheme;
+  defaultColorScheme: ColorScheme;
   options?: { withNotifications?: boolean };
   theme?: MantineThemeOverride | (() => MantineThemeOverride);
   cssVariablesResolver?: () => CSSVariablesResolver;
@@ -31,9 +31,7 @@ const COOKIE_OPTIONS = {
   sameSite: 'Lax' as const,
 };
 
-const customColorSchemeManager = (
-  defaultColorScheme: ColorScheme = ColorScheme.LIGHT,
-): MantineColorSchemeManager => {
+const customColorSchemeManager = (defaultColorScheme: ColorScheme): MantineColorSchemeManager => {
   return {
     get: (defaultValue) => {
       if (typeof window === 'undefined') return defaultValue;
@@ -100,14 +98,14 @@ const customColorSchemeManager = (
 
 export function ProviderMantine({
   appName,
-  colorScheme,
   defaultColorScheme,
   options,
   theme,
   cssVariablesResolver,
   children,
 }: ProviderMantineProps) {
-  const colorSchemeManager = customColorSchemeManager();
+  const colorSchemeManager = customColorSchemeManager(defaultColorScheme);
+  const storedColorScheme = getCookieClient<MantineColorScheme>(STORAGE_NAME.COLOR_SCHEME_STATE);
 
   // Resolve theme and resolver whether they are objects or functions
   const resolvedTheme = typeof theme === 'function' ? theme() : theme;
@@ -122,7 +120,7 @@ export function ProviderMantine({
       theme={resolvedTheme}
       cssVariablesResolver={handleCssVariablesResolver()}
       classNamesPrefix={linkify(appName || 'template-next')}
-      defaultColorScheme={colorScheme || defaultColorScheme}
+      defaultColorScheme={storedColorScheme || defaultColorScheme}
       colorSchemeManager={colorSchemeManager}
     >
       {children}

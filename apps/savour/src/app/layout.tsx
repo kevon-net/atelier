@@ -4,8 +4,9 @@ import { ProviderMantine } from '@repo/ui';
 import { ColorSchemeScript, MantineColorScheme, mantineHtmlProps } from '@mantine/core';
 import { ColorScheme } from '@repo/types';
 import { APP_DESC, APP_NAME } from '@savour/constants/app';
-
-import './globals.css';
+import { mantineTheme } from '@savour/theme';
+import { getAppResolver } from '@savour/resolver';
+import { DEFAULT_COLOR_SCHEME } from '@savour/constants/theme';
 
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
@@ -32,26 +33,26 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const resolvedTheme = ColorScheme.LIGHT as MantineColorScheme;
-
   return (
     <html
       lang="en"
       {...mantineHtmlProps}
-      data-mantine-color-scheme={resolvedTheme}
+      data-mantine-color-scheme={DEFAULT_COLOR_SCHEME}
+      suppressHydrationWarning
       className={`${fontDefault.variable} ${fontDefaultMono.variable}`}
     >
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-        <ColorSchemeScript defaultColorScheme={resolvedTheme} />
+        <ColorSchemeScript defaultColorScheme={DEFAULT_COLOR_SCHEME} />
       </head>
 
       <body className="min-h-full flex flex-col">
         <ProviderMantine
           options={{ withNotifications: true }}
-          colorScheme={resolvedTheme}
+          colorScheme={DEFAULT_COLOR_SCHEME}
+          defaultColorScheme={DEFAULT_COLOR_SCHEME}
           theme={mantineTheme}
           cssVariablesResolver={getAppResolver}
         >
