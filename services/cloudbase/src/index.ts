@@ -1,1 +1,1 @@
-export { createClient as createClientcloudbaseClient } from './client';
+export { createClient as createClientcloudbaseClient } from './supabase/client';
