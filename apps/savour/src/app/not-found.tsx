@@ -5,7 +5,7 @@ import { getAppResolver } from '@savour/resolver';
 
 export default function NotFound() {
   return (
-    <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver()}>
+    <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver}>
       <PartialError404 />
     </ProviderMantine>
   );

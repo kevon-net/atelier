@@ -21,7 +21,7 @@ export interface ProviderMantineProps {
   defaultColorScheme?: ColorScheme;
   options?: { withNotifications?: boolean };
   theme?: MantineThemeOverride | (() => MantineThemeOverride);
-  cssVariablesResolver?: CSSVariablesResolver; // Removed `| (() => CSSVariablesResolver)`
+  cssVariablesResolver?: () => CSSVariablesResolver;
   children: React.ReactNode;
 }
 
@@ -112,10 +112,15 @@ export function ProviderMantine({
   // Resolve theme and resolver whether they are objects or functions
   const resolvedTheme = typeof theme === 'function' ? theme() : theme;
 
+  const handleCssVariablesResolver = () => {
+    if (!cssVariablesResolver) return undefined;
+    return cssVariablesResolver();
+  };
+
   return (
     <MantineProvider
       theme={resolvedTheme}
-      cssVariablesResolver={cssVariablesResolver}
+      cssVariablesResolver={handleCssVariablesResolver()}
       classNamesPrefix={linkify(appName || 'template-next')}
       defaultColorScheme={colorScheme || defaultColorScheme}
       colorSchemeManager={colorSchemeManager}

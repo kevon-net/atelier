@@ -9,7 +9,7 @@ export default function GlobalError({ reset }: { reset: () => void }) {
   return (
     <html>
       <body>
-        <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver()}>
+        <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver}>
           <PartialError500 reset={reset} />
         </ProviderMantine>
       </body>

@@ -5,7 +5,7 @@ import { PartialLoadingPage, ProviderMantine } from '@repo/ui';
 
 export default function Loading() {
   return (
-    <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver()}>
+    <ProviderMantine theme={mantineTheme} cssVariablesResolver={getAppResolver}>
       <PartialLoadingPage />
     </ProviderMantine>
   );

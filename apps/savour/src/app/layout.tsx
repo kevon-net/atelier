@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           options={{ withNotifications: true }}
           colorScheme={resolvedTheme}
           theme={mantineTheme}
-          cssVariablesResolver={getAppResolver()}
+          cssVariablesResolver={getAppResolver}
         >
           {children}
         </ProviderMantine>
