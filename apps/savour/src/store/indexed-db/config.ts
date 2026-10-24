@@ -1,5 +1,4 @@
-import { BRAND_NAME } from '@savour/constants/app';
-import { STORE_NAME } from '@repo/constants';
+import { BRAND_NAME, STORE_NAME } from '@repo/constants';
 import { DBConfig } from '@repo/types';
 import { linkify } from '@repo/utils';
 

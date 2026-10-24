@@ -1,3 +1,5 @@
+export const BRAND_NAME = 'Atelier';
+
 export const STORAGE_NAME = {
   CONSENT: 'consent',
   COLOR_SCHEME: 'color-scheme',

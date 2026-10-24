@@ -1,12 +1,6 @@
-export const BRAND_NAME = 'Atelier';
+export const APP_NAME = 'Savour';
 
-export const APP_NAME = {
-  WEB: BRAND_NAME,
-};
-
-export const APP_DESC = {
-  WEB: 'The Atelier API layer provides centralized business capabilities, data access, authentication, and communication patterns used across Atelier products.',
-};
+export const APP_DESC = `${APP_NAME} offers a delightful dining experience with fresh, locally sourced ingredients and authentic [Cuisine Type] dishes. Reserve your table or order online today!`;
 
 export const PHONES = {
   MAIN: '(254) 123 456-789',

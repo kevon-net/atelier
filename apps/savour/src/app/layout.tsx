@@ -28,8 +28,8 @@ const fontDefaultMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: APP_NAME.WEB,
-  description: APP_DESC.WEB,
+  title: APP_NAME,
+  description: APP_DESC,
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
