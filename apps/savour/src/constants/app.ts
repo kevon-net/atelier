@@ -8,11 +8,8 @@ export const PHONES = {
 
 export const EMAILS = {
   DEV: process.env.NEXT_PUBLIC_EMAIL_DEV,
-  DELIVERY: process.env.NEXT_PUBLIC_EMAIL_DELIVERY,
+  INQUIRIES: process.env.NEXT_PUBLIC_EMAIL_INQUIRIES,
   NO_REPLY: process.env.NEXT_PUBLIC_EMAIL_NOREPLY,
-  INFO: process.env.NEXT_PUBLIC_EMAIL_INFO,
-  SUPPORT: process.env.NEXT_PUBLIC_EMAIL_SUPPORT,
-  NEWSLETTER: process.env.NEXT_PUBLIC_EMAIL_NEWSLETTER,
 };
 
 export const BUSINESS_HOURS = {
