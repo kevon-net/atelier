@@ -13,7 +13,7 @@ export const authRoutes = [
   AUTH_ROUTE.SIGN_UP,
   AUTH_ROUTE.SIGN_IN,
   AUTH_ROUTE.ERROR,
-  AUTH_ROUTE.SIGN_OUT,
+  AUTH_ROUTE.SIGNED_OUT,
 
   // Add other auth routes
 ];

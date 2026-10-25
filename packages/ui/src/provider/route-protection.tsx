@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { authRoutes } from '@repo/constants';
 import { Center } from '@mantine/core';
+import { SpinnerApp } from '../spinner/app';
 
 export function ProviderRouteProtection({ children }: { children: React.ReactNode }) {
   const user = useStoreAuth((s) => s.user);
@@ -17,7 +18,7 @@ export function ProviderRouteProtection({ children }: { children: React.ReactNod
     if (isLoading) return;
 
     // Helper checks
-    const isAuthRoute = authRoutes.includes(pathname) || pathname.startsWith('/auth/');
+    const isAuthRoute = authRoutes.some((ar) => pathname.includes(ar));
     const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
     // Rule 1: Authenticated user trying to access an auth route -> Redirect to home/redirect
@@ -33,13 +34,13 @@ export function ProviderRouteProtection({ children }: { children: React.ReactNod
   if (isLoading) {
     return (
       <Center className="h-screen">
-        <div>Loading...</div>
+        <SpinnerApp />
       </Center>
     );
   }
 
   // Prevent flashing content while redirecting
-  const isAuthRoute = authRoutes.includes(pathname) || pathname.startsWith('/auth/');
+  const isAuthRoute = authRoutes.includes(pathname);
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if ((!user && isProtectedRoute) || (user && isAuthRoute)) {
