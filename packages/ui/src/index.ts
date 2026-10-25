@@ -1,5 +1,6 @@
 export * from './anchor/next-link';
 
+export * from './button/auth';
 export * from './button/confirm-cancel';
 
 export * from './form/auth';

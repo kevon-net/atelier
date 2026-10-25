@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@repo/cloudbase';
+import { AUTH_ROUTE, URL_PARAM_NAME } from '@repo/constants';
 
 interface AuthState {
   user: User | null;
@@ -52,7 +53,14 @@ export const useStoreAuth = create<AuthState>((set) => ({
 
   signOut: async () => {
     set({ isLoading: true });
-    await supabase.auth.signOut();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error('Error signing out:', error.message);
+      window.location.href = `${AUTH_ROUTE.ERROR}?${URL_PARAM_NAME.ERROR}=${encodeURIComponent(error.message)}`;
+    }
+
     set({ user: null, session: null, isLoading: false });
   },
 }));
