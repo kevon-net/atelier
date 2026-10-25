@@ -19,6 +19,7 @@ export * from './parser/html';
 
 export * from './partial/error/404';
 export * from './partial/error/500';
+export * from './partial/error/auth';
 
 export * from './partial/loading/page';
 

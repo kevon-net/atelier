@@ -14,6 +14,7 @@ export const STORAGE_NAME = {
 };
 
 export const URL_PARAM_NAME = {
+  ERROR: 'error',
   REDIRECT: 'redirect',
 };
 
