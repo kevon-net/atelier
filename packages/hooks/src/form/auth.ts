@@ -1,153 +1,102 @@
 'use client';
 
-import { getUrlParam, isProduction, validators } from '@repo/utils';
-import { AuthAction } from '@repo/types';
-import {
-  AUTH_ROUTE,
-  STORAGE_NAME,
-  URL_PARAM_NAME,
-  SECONDS_HOUR,
-  SECONDS_MINUTE,
-} from '@repo/constants';
-import { useEffect, useState } from 'react';
-import { getCookieClient, setCookieClient } from '@repo/utils';
+import { getUrlParam, validators } from '@repo/utils';
+import { AUTH_ROUTE, URL_PARAM_NAME } from '@repo/constants';
+import { useState } from 'react';
 import { useForm } from '@mantine/form';
-import { signIn, signInCallback } from '@repo/auth';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@repo/cloudbase';
 
-export const useFormAuth = (params: { action: AuthAction; baseUrl: string }) => {
-  const [step, setStep] = useState<'email' | 'otp'>('email');
+export const useFormAuth = () => {
+  const router = useRouter();
+
+  const [step, setStep] = useState<'request' | 'verify'>('request');
   const [display, setDisplay] = useState<{ error?: string; message?: string } | null>(null);
 
   const [submitted, setSubmitted] = useState(false);
 
-  const form = useForm({ initialValues: { email: '', otp: '' } });
+  const form = useForm({ initialValues: { email: '', token: '' } });
 
-  const submitOps = {
-    submitEmail: async (values: typeof form.values, options?: { resend?: boolean }) => {
-      if (submitted) return;
-      if (display) setDisplay(null);
+  // Step 1: Request Email OTP (Auto-creates account if new)
+  const handleRequestOtp = async (e: React.FormEvent, options?: { resend?: boolean }) => {
+    e.preventDefault();
+    if (submitted) return;
+    setSubmitted(true);
+    setDisplay(null);
 
-      if (options?.resend) {
-        let lastOtpRequestTime = getCookieClient<string>(STORAGE_NAME.AUTH.OTP_REQUEST_TIME);
+    const formValues = form.getValues();
 
-        if (lastOtpRequestTime) {
-          // get 1 min from previous OTP request
-          const nextMinute = new Date(
-            new Date(lastOtpRequestTime).getTime() + 1 * SECONDS_MINUTE * 1000,
-          );
+    if (step != 'request') setStep('request');
 
-          if (new Date() < nextMinute) {
-            setDisplay({ error: 'You can request code again after 1 minute.' });
-            return;
-          }
-        }
-      }
+    if (options?.resend) {
+      if (formValues.token.trim().length > 0) form.setFieldValue('token', '');
+    }
 
-      if (step != 'email') setStep('email');
+    // manual validate
+    if (!!validators.email(formValues.email.trim())) {
+      form.setFieldError('email', true);
+      setDisplay({ error: 'Invalid email format.' });
+      return;
+    }
 
-      if (options?.resend) {
-        if (values.otp) form.setFieldValue('otp', '');
-      }
+    const { error } = await supabase.auth.signInWithOtp({
+      email: formValues.email,
+      options: {
+        // If enable_confirmations is false in config.toml, this logs them in immediately.
+        // If true, it sends a 6-digit token to their email.
+        shouldCreateUser: true,
+      },
+    });
 
-      // manual validate
-      if (!!validators.email(values.email.trim())) {
-        form.setFieldError('email', true);
-        setDisplay({ error: 'Invalid email format.' });
-        return;
-      }
+    if (error) {
+      setDisplay({ error: error.message });
+    } else {
+      setStep('verify');
+    }
 
-      setSubmitted(true);
-
-      setCookieClient(STORAGE_NAME.AUTH.EMAIL, values.email, {
-        expiryInSeconds: SECONDS_HOUR,
-        secure: isProduction(),
-        sameSite: 'Lax',
-      });
-
-      setCookieClient(STORAGE_NAME.AUTH.OTP_REQUEST_TIME, new Date().toISOString(), {
-        expiryInSeconds: SECONDS_HOUR,
-        secure: isProduction(),
-        sameSite: 'Lax',
-      });
-
-      // const response = await signIn(
-      //   {
-      //     values,
-      //     options: { action: params.action },
-      //   },
-      //   `${params.baseUrl}/api`,
-      // );
-
-      // const data = await response.json();
-
-      // setDisplay({ ...data });
-
-      // if (!data.error) {
-      //   // all well. otp sent to email. proceed to otp step.
-      //   setStep('otp');
-      // }
-
-      setSubmitted(false);
-    },
-
-    submitOtp: async (values: typeof form.values) => {
-      if (submitted) return;
-      if (display) setDisplay(null);
-
-      // manual validate
-      if (values.otp.length != 8) {
-        form.setFieldError('otp', true);
-        setDisplay({ error: 'OTP must be exactly 8 characters long.' });
-        return;
-      }
-
-      setSubmitted(true);
-
-      const redirect = getUrlParam(URL_PARAM_NAME.REDIRECT) || AUTH_ROUTE.REDIRECT;
-      const redirectUrl = encodeURIComponent(redirect as string);
-
-      // const response = await signInCallback(
-      //   {
-      //     values,
-      //     options: { action: params.action },
-      //   },
-      //   `${params.baseUrl}/api`,
-      //   redirectUrl,
-      //   params.baseUrl,
-      // );
-
-      // const data = await response.json();
-
-      // setDisplay({ ...data });
-
-      // if (data.error) {
-      //   form.setFieldValue('otp', '');
-      //   setSubmitted(false);
-      // } else {
-      //   // redirect after auth
-      //   window.location.href = decodeURIComponent(redirectUrl);
-      // }
-    },
+    setSubmitted(false);
   };
 
-  useEffect(() => {
-    const savedEmail = getCookieClient(STORAGE_NAME.AUTH.EMAIL);
+  // Step 2: Verify the 6-digit OTP token
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitted) return;
+    setSubmitted(true);
+    setDisplay(null);
 
-    if (savedEmail) {
-      form.setFieldValue('email', savedEmail);
+    const formValues = form.getValues();
 
-      if (step == 'otp') {
-        setDisplay({ message: 'Check your email for an OTP' });
-      }
+    // manual validate
+    if (formValues.token.length != 8) {
+      form.setFieldError('otp', true);
+      setDisplay({ error: 'OTP must be exactly 8 characters long.' });
+      return;
     }
-  }, []);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email: formValues.email,
+      token: formValues.token,
+      type: 'email',
+    });
+
+    if (error) {
+      setDisplay({ error: error.message });
+    } else {
+      const redirect = getUrlParam(URL_PARAM_NAME.REDIRECT) as string | null;
+      const redirectUrl = redirect ? decodeURIComponent(redirect) : AUTH_ROUTE.REDIRECT;
+
+      router.replace(redirectUrl);
+    }
+
+    setSubmitted(false);
+  };
 
   return {
     form,
     submitted,
-    submitOps,
     step,
     display,
-    setDisplay,
+    handleRequestOtp,
+    handleVerifyOtp,
   };
 };

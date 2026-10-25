@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, JetBrains_Mono } from 'next/font/google';
-import { ProviderMantine } from '@repo/ui';
+import { ProviderAuth, ProviderMantine, ProviderRouteProtection } from '@repo/ui';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import { APP_DESC, APP_NAME } from '@savour/constants/app';
 import { mantineTheme } from '@savour/theme';
@@ -53,16 +53,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
 
       <body className="min-h-full flex flex-col">
-        <ProviderMantine
-          options={{ withNotifications: true }}
-          colorScheme={DEFAULT_COLOR_SCHEME}
-          defaultColorScheme={DEFAULT_COLOR_SCHEME}
-          theme={mantineTheme}
-          cssVariablesResolver={getAppResolver}
-        >
-          {children}
-        </ProviderMantine>
+        <RootWrapper>{children}</RootWrapper>
       </body>
     </html>
+  );
+}
+
+function RootWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <ProviderMantine
+      options={{ withNotifications: true }}
+      colorScheme={DEFAULT_COLOR_SCHEME}
+      defaultColorScheme={DEFAULT_COLOR_SCHEME}
+      theme={mantineTheme}
+      cssVariablesResolver={getAppResolver}
+    >
+      <ProviderAuth>
+        <ProviderRouteProtection>
+          <>{children}</>
+        </ProviderRouteProtection>
+      </ProviderAuth>
+    </ProviderMantine>
   );
 }

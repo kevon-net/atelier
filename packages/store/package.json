@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "@repo/constants": "workspace:*",
+    "@repo/cloudbase": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/utils": "workspace:*",
+    "@supabase/supabase-js": "^2.89.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
