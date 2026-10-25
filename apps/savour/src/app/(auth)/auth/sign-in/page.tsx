@@ -1,6 +1,8 @@
 import React from 'react';
-import { AnchorNextLink, FormAuth } from '@repo/ui';
-import { Box, Card, Stack, Text, Title } from '@mantine/core';
+import { AnchorNextLink, FormAuth, ImageDefault } from '@repo/ui';
+import { Box, Card, Group, Stack, Text, Title } from '@mantine/core';
+import { images } from '@savour/constants/images';
+import { APP_NAME } from '@savour/constants/app';
 
 export default function SignIn() {
   return (
@@ -10,6 +12,18 @@ export default function SignIn() {
         padding={'xl'}
       >
         <Stack gap={'xl'} w={{ xs: 320 }}>
+          <Group justify="center">
+            <AnchorNextLink href={'/'}>
+              <ImageDefault
+                src={images.brand.icon.meta.light}
+                alt={APP_NAME}
+                height={48}
+                width={48}
+                fit="contain"
+              />
+            </AnchorNextLink>
+          </Group>
+
           <Stack ta={'center'}>
             <Title order={1} fz={'xl'}>
               Welcome Back

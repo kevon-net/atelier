@@ -1,8 +1,10 @@
 import React from 'react';
 import { Button, Card, Group, Stack, Text, Title } from '@mantine/core';
-import { AnchorNextLink, ButtonSignOut } from '@repo/ui';
+import { AnchorNextLink, ButtonSignOut, ImageDefault } from '@repo/ui';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants';
+import { images } from '@savour/constants/images';
+import { APP_NAME } from '@savour/constants/app';
 
 export default function SignOut() {
   return (
@@ -12,6 +14,18 @@ export default function SignOut() {
         padding={'xl'}
       >
         <Stack gap={'xl'} w={{ xs: 320 }}>
+          <Group justify="center">
+            <AnchorNextLink href={'/'}>
+              <ImageDefault
+                src={images.brand.icon.meta.light}
+                alt={APP_NAME}
+                height={48}
+                width={48}
+                fit="contain"
+              />
+            </AnchorNextLink>
+          </Group>
+
           <Stack ta={'center'}>
             <Title order={1} fz={'xl'}>
               End Session
