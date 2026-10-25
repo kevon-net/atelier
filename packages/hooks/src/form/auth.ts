@@ -22,7 +22,6 @@ export const useFormAuth = () => {
     e.preventDefault();
     if (submitted) return;
     setSubmitted(true);
-    setDisplay(null);
 
     const formValues = form.getValues();
 
@@ -35,9 +34,12 @@ export const useFormAuth = () => {
     // manual validate
     if (!!validators.email(formValues.email.trim())) {
       form.setFieldError('email', true);
-      setDisplay({ error: 'Invalid email format.' });
+      // setDisplay({ error: 'Invalid email format.' });
+      setSubmitted(false);
       return;
     }
+
+    setDisplay(null);
 
     const { error } = await supabase.auth.signInWithOtp({
       email: formValues.email,
@@ -50,7 +52,11 @@ export const useFormAuth = () => {
 
     if (error) {
       setDisplay({ error: error.message });
+      if (options?.resend) setStep('verify');
     } else {
+      setDisplay({
+        message: `An OTP has been sent. Remember to check junk/spam folder.`,
+      });
       setStep('verify');
     }
 
@@ -62,16 +68,18 @@ export const useFormAuth = () => {
     e.preventDefault();
     if (submitted) return;
     setSubmitted(true);
-    setDisplay(null);
 
     const formValues = form.getValues();
 
     // manual validate
-    if (formValues.token.length != 8) {
-      form.setFieldError('otp', true);
-      setDisplay({ error: 'OTP must be exactly 8 characters long.' });
+    if (formValues.token.length != 6) {
+      form.setFieldError('token', true);
+      // setDisplay({ error: 'OTP must be exactly 8 characters long.' });
+      setSubmitted(false);
       return;
     }
+
+    setDisplay(null);
 
     const { error } = await supabase.auth.verifyOtp({
       email: formValues.email,
@@ -95,7 +103,9 @@ export const useFormAuth = () => {
     form,
     submitted,
     step,
+    setStep,
     display,
+    setDisplay,
     handleRequestOtp,
     handleVerifyOtp,
   };

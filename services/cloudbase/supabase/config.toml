@@ -244,6 +244,16 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# For new users
+[auth.email.template.confirmation]
+subject = "Your Verification Code"
+content_path = "./supabase/templates/email-otp.html"
+
+# For returning users
+[auth.email.template.magic_link]
+subject = "Your Verification Code"
+content_path = "./supabase/templates/email-otp.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

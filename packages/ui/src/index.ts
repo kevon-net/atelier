@@ -2,6 +2,8 @@ export * from './anchor/next-link';
 
 export * from './button/confirm-cancel';
 
+export * from './form/auth';
+
 export * from './layout/intros/page';
 export * from './layout/intros/section';
 export * from './layout/main';

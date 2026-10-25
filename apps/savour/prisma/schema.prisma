@@ -6,10 +6,12 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  features = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["savour"]
 }
 
 //
@@ -18,8 +20,11 @@ datasource db {
 
 enum Role {
   USER
-  ADMIN
-  DEV
+  ADMINISTRATOR
+  DEVELOPER
+  CONTENT_MANAGER
+
+  @@schema("savour")
 }
 
 // enum SyncStatus {
@@ -28,23 +33,23 @@ enum Role {
 //   SAVED
 //   ERROR
 //   DELETED
+
+//   @@schema("savour")
 // }
 
 //
 // CORE
 //
-
 model Profile {
-  id         String  @id @default(cuid())
+  id         String  @id @db.Uuid
   email      String
   name       String?
   userName   String? @map("user_name")
   avatar     String?
   customized Boolean @default(false)
 
-  sessions   Session[]
-  workspaces Workspace[]
-  inquiries  Inquiry[]
+  folders   Folder[]
+  inquiries Inquiry[]
 
   // syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
@@ -54,71 +59,42 @@ model Profile {
   @@unique([email])
   @@unique([userName])
   @@map("profiles")
-}
-
-model Session {
-  id        String   @id @default(cuid())
-  expiresAt DateTime @map("expires_at")
-  otp       String?
-
-  // additional data that might change per session, or during a session
-  timezone String?
-
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String  @map("profile_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("sessions")
+  @@schema("savour")
 }
 
 //
 // APP DATA
 //
 
-model Workspace {
-  id   String @id @default(cuid())
-  name String
-
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String  @map("profile_id")
-
-  folders Folder[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("workspaces")
-}
-
 model Folder {
-  id       String  @id @default(cuid())
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name     String
   location String
   folderId String? @map("folder_id") // points to parent folder
 
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId String    @map("workspace_id")
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("folders")
+  @@schema("savour")
 }
 
 model Inquiry {
-  id      String @id @default(cuid())
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name    String
   email   String
   subject String
   message String
 
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String?  @map("profile_id")
+  profileId String?  @map("profile_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("inquiries")
+  @@schema("savour")
 }
