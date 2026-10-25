@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function LayoutApp({ children }: { children: React.ReactNode }) {
+export default function LayoutMarketing({ children }: { children: React.ReactNode }) {
   return <div>{children}</div>;
 }
