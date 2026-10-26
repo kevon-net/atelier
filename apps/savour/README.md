@@ -1,143 +1,69 @@
-# Atelier Web
+# Atelier 🎨
 
-The public-facing web application for the Atelier ecosystem.
+Welcome to **Atelier**, my personal monorepo. This is where I experiment, build, and showcase various projects, tools, and applications for my portfolio.
 
-This application provides the entry point for users, customers, and visitors to discover Atelier products, learn about solutions, and begin their journey into the ecosystem.
-
----
-
-## Purpose
-
-`apps/web` serves as the external-facing layer of Atelier.
-
-Its responsibilities include:
-
-- Company website
-- Product marketing pages
-- Public documentation
-- Landing pages
-- User onboarding flows
-- Public content
-
-The web application is separate from individual Atelier products, allowing it to evolve independently.
+Named after an artist's workshop, Atelier serves as a centralized creative space to keep all my code organized, share components, and maintain a consistent workflow across different projects.
 
 ---
 
-## Role in the Ecosystem
+## 📂 Project Structure
 
-Atelier consists of multiple products and services.
-
-The web application acts as the gateway into these experiences:
+```text
+atelier/
+├── apps/                # Standalone applications (web apps, mobile, etc.)
+│   ├── project-1/       # First project
+│   └── project-2/       # Second project
+├── packages/            # Shared libraries, UI components, and configs
+│   ├── ui/              # Shared design system / UI components
+│   └── config/          # Shared configurations (TypeScript, ESLint, etc.)
+└── package.json         # Root workspace configuration
 
 ```
-atelier.com
-        |
-        |
-        +-- Atlas
-        +-- Future products
-        +-- Services
-```
-
-It introduces users to the ecosystem while product applications handle authenticated experiences.
 
 ---
 
-## Architecture
+## 🚀 Getting Started
 
-The web application follows Atelier's thin application principle.
+### Prerequisites
 
-It focuses on:
+Make sure you have the following installed on your machine:
 
-- Page composition
-- Routing
-- User experience
-- Content presentation
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [pnpm](https://pnpm.io/) (or your preferred package manager like npm/yarn)
 
-Business logic and shared capabilities are provided through Atelier packages and services.
+### Installation
 
----
-
-## Features
-
-Current and future capabilities include:
-
-### Marketing
-
-- Company information
-- Product showcases
-- Feature explanations
-- Public announcements
-
-### Onboarding
-
-- Account creation flows
-- Product introductions
-- User activation experiences
-
-### Public Content
-
-- Documentation
-- Guides
-- Resources
-- Blog or announcements
-
----
-
-## Technology
-
-- Framework: Next.js
-- UI: Atelier Design System
-- Styling: Tailwind / Mantine
-- Tooling: pnpm, Turborepo
-
----
-
-## Development
-
-From the repository root:
-
-Install dependencies:
+Clone the repository and install dependencies from the root directory:
 
 ```bash
+# Clone the repository
+git clone https://github.com/kevon-net/atelier.git
+cd atelier
+
+# Install dependencies
 pnpm install
+
 ```
-
-Run the web application:
-
-```bash
-pnpm --filter web dev
-```
-
-The application will start in development mode.
 
 ---
 
-## Environment
+## 💻 Development
 
-Required environment variables:
+You can run individual projects or work across the workspace using your package manager's workspace commands.
 
-```bash
-NEXT_PUBLIC_*
-```
-
-Additional variables may be added as new features are introduced.
+- **Run a specific project:** `pnpm <app-name>:dev`
+- **If a project is exported statically, run with:** `npx serve@latest out -l <port>`
 
 ---
 
-## Relationship With Other Applications
+## 🛠️ Tech Stack
 
-### Atlas
-
-Atlas is the primary Atelier product application.
-
-The web application provides discovery and onboarding, while Atlas provides the authenticated product experience.
-
-### API
-
-The web application communicates with Atelier backend services through shared APIs.
+- **Monorepo Manager:** pnpm Workspaces (or Turborepo / Nx if applicable)
+- **Frontend:** React / Next.js / TypeScript (adjust as needed)
+- **Styling:** Tailwind CSS
 
 ---
 
-## Status
+## 📄 License
 
-Early-stage. The Atelier web experience is under active development.
+This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
