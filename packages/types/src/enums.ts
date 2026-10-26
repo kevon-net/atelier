@@ -14,6 +14,7 @@ export enum EncryptionAlg {
 export enum AuthAction {
   SIGN_UP = 'SIGN-UP',
   SIGN_IN = 'SIGN-IN',
+  SIGN_OUT = 'SIGN-OUT',
 }
 
 export enum TimerDirection {

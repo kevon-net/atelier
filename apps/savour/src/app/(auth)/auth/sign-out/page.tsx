@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, Group, Stack, Text, Title } from '@mantine/core';
-import { AnchorNextLink, ButtonSignOut, ImageDefault } from '@repo/ui';
-import { IconChevronLeft } from '@tabler/icons-react';
+import { AnchorNextLink, ImageDefault, WrapperAuthActionSignOut } from '@repo/ui';
+import { IconChevronLeft, IconLogout } from '@tabler/icons-react';
 import { ICON_SIZE, ICON_STROKE_WIDTH } from '@repo/constants';
 import { images } from '@savour/constants/images';
 import { APP_NAME } from '@savour/constants/app';
@@ -46,7 +46,16 @@ export default function SignOut() {
               </Button>
             </AnchorNextLink>
 
-            <ButtonSignOut />
+            <WrapperAuthActionSignOut>
+              <Button
+                size="xs"
+                rightSection={<IconLogout size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+                miw={150}
+                color="red"
+              >
+                Sign Out
+              </Button>
+            </WrapperAuthActionSignOut>
           </Group>
         </Stack>
       </Card>

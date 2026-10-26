@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { setRedirectUrl } from '@repo/utils';
 import { LoadingOverlay } from '@mantine/core';
-import { deleteDatabase } from '@repo/store';
+import { deleteDatabase, useStoreAuth } from '@repo/store';
 import { AuthAction } from '@repo/types';
 import { DBConfig } from '@repo/types';
 import { AUTH_ROUTE } from '@repo/constants';
@@ -20,68 +20,73 @@ export function WrapperAuth({
   const pathname = usePathname();
 
   const handleClick = () => {
-    const resolvedUrl =
-      options.action == AuthAction.SIGN_IN ? AUTH_ROUTE.SIGN_IN : AUTH_ROUTE.SIGN_OUT;
-
-    router.push(setRedirectUrl({ targetUrl: resolvedUrl, redirectUrl: pathname }));
+    const isSignOut = options.action == AuthAction.SIGN_OUT;
+    const resolvedUrl = isSignOut ? AUTH_ROUTE.SIGN_OUT : AUTH_ROUTE.SIGN_IN;
+    router.push(
+      isSignOut ? resolvedUrl : setRedirectUrl({ targetUrl: resolvedUrl, redirectUrl: pathname }),
+    );
   };
 
   return <span onClick={handleClick}>{children}</span>;
 }
 
 export function WrapperAuthActionSignOut({
-  props,
+  dbConfig,
+  options,
   children,
 }: {
-  props: {
-    baseUrl: string;
-    dbConfig: DBConfig;
-    options?: { clearDB?: boolean; redirectUrl?: string };
-  };
+  dbConfig?: DBConfig;
+  options?: { clearDB?: boolean; redirectUrl?: string };
   children: React.ReactNode;
 }) {
-  const [clicked, setClicked] = useState(false);
-  // const { session } = useStoreSession(); // change this to suapabase api
+  const user = useStoreAuth((s) => s.user);
+  const session = useStoreAuth((s) => s.session);
+  const [loading, setLoading] = useState(false);
 
-  // const handleClick = async () => {
-  //   setClicked(true);
+  const router = useRouter();
+  const signOut = useStoreAuth((s) => s.signOut);
 
-  //   if (!!session) {
-  //     // sign out
+  const handleSignOut = async () => {
+    // do nothing if not authenticated
+    if (!session || !user) return;
 
-  //     // Shut down local db connections delete local db
-  //     if (props.options?.clearDB) {
-  //       await deleteDatabase(props.dbConfig.name);
-  //     }
+    setLoading(true);
 
-  //     // clear storage
-  //     localStorage.clear();
-  //     sessionStorage.clear();
+    // supabase sign out
+    await signOut();
 
-  //     // clear client cookies
-  //     document.cookie.split(';').forEach((c) => {
-  //       document.cookie = c
-  //         .replace(/^ +/, '')
-  //         .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
-  //     });
-  //   }
+    // Shut down local db connections delete local db
+    if (options?.clearDB && dbConfig?.name) {
+      await deleteDatabase(dbConfig.name);
+    }
 
-  //   window.location.href = props.options?.redirectUrl || AUTH_ROUTE.SIGNED_OUT;
-  // };
+    // clear storage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // clear client cookies
+    document.cookie.split(';').forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+    });
+
+    // router.replace(options?.redirectUrl || AUTH_ROUTE.SIGNED_OUT);
+    router.replace(options?.redirectUrl || '/');
+
+    setLoading(false);
+  };
 
   return (
-    <span style={{ position: 'relative', zIndex: 1 }}>
+    <span style={{ position: 'relative', zIndex: 0 }}>
       <LoadingOverlay
-        visible={clicked}
-        overlayProps={{ radius: 'md', blur: 3 }}
-        loaderProps={{ size: 'xs' }}
+        visible={loading}
+        overlayProps={{ blur: 3 }}
+        loaderProps={{ size: 12 }}
         style={{ zIndex: 2 }}
       />
 
-      <span
-        // onClick={handleClick}
-        style={{ zIndex: 2 }}
-      >
+      <span onClick={handleSignOut} style={{ zIndex: 1 }}>
         {children}
       </span>
     </span>
