@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  features = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["savour"]
+}
+
+//
+// ENUMS
+//
+
+enum Role {
+  USER
+  ADMINISTRATOR
+  DEVELOPER
+  CONTENT_MANAGER
+
+  @@schema("savour")
+}
+
+// enum SyncStatus {
+//   PENDING
+//   SYNCED
+//   SAVED
+//   ERROR
+//   DELETED
+
+//   @@schema("savour")
+// }
+
+//
+// CORE
+//
+model Profile {
+  id         String  @id @db.Uuid
+  email      String
+  name       String?
+  userName   String? @map("user_name")
+  avatar     String?
+  customized Boolean @default(false)
+
+  folders   Folder[]
+  inquiries Inquiry[]
+
+  // syncStatus SyncStatus @default(SYNCED) @map("sync_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([email])
+  @@unique([userName])
+  @@map("profiles")
+  @@schema("savour")
+}
+
+//
+// APP DATA
+//
+
+model Folder {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  location String
+  folderId String? @map("folder_id") // points to parent folder
+
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("folders")
+  @@schema("savour")
+}
+
+model Inquiry {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String
+  email   String
+  subject String
+  message String
+
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String?  @map("profile_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("inquiries")
+  @@schema("savour")
+}

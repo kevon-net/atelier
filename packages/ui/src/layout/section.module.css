@@ -1,0 +1,11 @@
+.responsiveContainer {
+  max-width: var(--mantine-breakpoint-xl) !important;
+
+  @media (min-width: 48em) {
+    padding-inline: var(--mantine-spacing-xl) !important;
+  }
+
+  @media (min-width: 88em) {
+    padding-inline: calc(var(--mantine-spacing-xl) * 2) !important;
+  }
+}

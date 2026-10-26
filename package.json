@@ -1,0 +1,40 @@
+{
+  "name": "repo-root",
+  "private": true,
+  "scripts": {
+    "purge": "find . \\( -name \"node_modules\" -o -name \".turbo\" -o -name \".next\" -o -name \"pnpm-lock.yaml\" -o -name \"package-lock.json\" \\) -exec rm -rf {} +",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "supabase:start": "pnpm --filter @repo/cloudbase supabase:start",
+    "supabase:stop": "pnpm --filter @repo/cloudbase supabase:stop",
+    "supabase:status": "pnpm --filter @repo/cloudbase supabase:status",
+    "supabase:reset": "pnpm --filter @repo/cloudbase supabase:reset",
+    "supabase:migration-new": "pnpm --filter @repo/cloudbase supabase:migration-new",
+    "supabase:gen-types": "pnpm --filter @repo/cloudbase supabase:gen-types",
+    "savour:dev": "pnpm --filter savour dev",
+    "savour:build": "pnpm --filter savour build",
+    "savour:start": "pnpm --filter savour start",
+    "savour:lint": "pnpm --filter savour lint",
+    "savour:check-types": "pnpm --filter savour check-types",
+    "savour:db-generate": "pnpm --filter savour db:generate",
+    "savour:db-migrate-dev": "pnpm --filter savour db:migrate-dev",
+    "savour:db-migrate-deploy": "pnpm --filter savour db:migrate-deploy",
+    "savour:db-migrate-reset": "pnpm --filter savour db:migrate-reset",
+    "savour:db-push": "pnpm --filter savour db:push",
+    "savour:db-studio": "pnpm --filter savour db:studio",
+    "savour:db-seed": "pnpm --filter savour db:seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.3",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
