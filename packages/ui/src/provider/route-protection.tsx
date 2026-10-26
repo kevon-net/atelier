@@ -27,8 +27,9 @@ export function ProviderRouteProtection({ children }: { children: React.ReactNod
     }
     // Rule 2: Unauthenticated user trying to access a protected route -> Redirect to sign-in
     else if (!user && isProtectedRoute && !isAuthRoute) {
+      const redirectIsSignOut = pathname.includes(AUTH_ROUTE.SIGN_OUT);
       router.replace(
-        `${AUTH_ROUTE.SIGN_IN}?${URL_PARAM_NAME.REDIRECT}=${encodeURIComponent(pathname)}`,
+        `${AUTH_ROUTE.SIGN_IN}?${URL_PARAM_NAME.REDIRECT}=${encodeURIComponent(redirectIsSignOut ? '/' : pathname)}`,
       );
     }
   }, [user, isLoading, router, pathname]);

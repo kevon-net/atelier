@@ -20,6 +20,7 @@ export const authRoutes = [
 ];
 
 export const protectedRoutes = [
+  AUTH_ROUTE.SIGN_OUT,
   '/admin',
 
   // // Add other protected routes
