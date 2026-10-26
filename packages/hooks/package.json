@@ -16,7 +16,6 @@
   "dependencies": {
     "@mantine/form": "^9.4.2",
     "@mantine/hooks": "^9.4.2",
-    "@repo/auth": "workspace:*",
     "@repo/constants": "workspace:*",
     "@repo/cloudbase": "workspace:*",
     "@repo/types": "workspace:*",

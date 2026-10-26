@@ -20,7 +20,6 @@
     "@mantine/hooks": "^9.4.2",
     "@mantine/notifications": "^9.4.2",
     "@mantine/schedule": "^9.4.2",
-    "@repo/auth": "workspace:*",
     "@repo/cloudbase": "workspace:*",
     "@repo/constants": "workspace:*",
     "@repo/notifications": "workspace:*",
