@@ -35,14 +35,16 @@ export default function Error() {
           </Stack>
 
           <Group justify="center">
-            <Button
-              size="xs"
-              variant="default"
-              leftSection={<IconChevronLeft size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
-              miw={150}
-            >
-              Back Home
-            </Button>
+            <AnchorNextLink href={'/'}>
+              <Button
+                size="xs"
+                variant="default"
+                leftSection={<IconChevronLeft size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+                miw={150}
+              >
+                Back Home
+              </Button>
+            </AnchorNextLink>
           </Group>
         </Stack>
       </Card>
