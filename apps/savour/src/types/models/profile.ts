@@ -12,8 +12,7 @@ export type ProfileGet = Profile;
 // Type for fetched item with relations
 export type ProfileRelations = Prisma.ProfileGetPayload<{
   include: {
+    folders: true;
     inquiries: true;
-    sessions: true;
-    workspaces: true;
   };
 }>;
