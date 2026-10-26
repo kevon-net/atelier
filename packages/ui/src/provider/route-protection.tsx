@@ -1,6 +1,6 @@
 'use client';
 
-import { AUTH_ROUTE, protectedRoutes } from '@repo/constants';
+import { AUTH_ROUTE, protectedRoutes, URL_PARAM_NAME } from '@repo/constants';
 import { useStoreAuth } from '@repo/store';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -26,8 +26,10 @@ export function ProviderRouteProtection({ children }: { children: React.ReactNod
       router.replace(AUTH_ROUTE.REDIRECT);
     }
     // Rule 2: Unauthenticated user trying to access a protected route -> Redirect to sign-in
-    else if (!user && isProtectedRoute) {
-      router.replace(AUTH_ROUTE.SIGN_IN);
+    else if (!user && isProtectedRoute && !isAuthRoute) {
+      router.replace(
+        `${AUTH_ROUTE.SIGN_IN}?${URL_PARAM_NAME.REDIRECT}=${encodeURIComponent(pathname)}`,
+      );
     }
   }, [user, isLoading, router, pathname]);
 
@@ -40,10 +42,10 @@ export function ProviderRouteProtection({ children }: { children: React.ReactNod
   }
 
   // Prevent flashing content while redirecting
-  const isAuthRoute = authRoutes.includes(pathname);
+  const isAuthRoute = authRoutes.some((ar) => pathname.includes(ar));
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  if ((!user && isProtectedRoute) || (user && isAuthRoute)) {
+  if ((!user && isProtectedRoute && !isAuthRoute) || (user && isAuthRoute)) {
     return null;
   }
 
