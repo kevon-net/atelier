@@ -1,5 +1,7 @@
 export * from './anchor/next-link';
 
+export * from './avatar/session';
+
 export * from './button/auth';
 export * from './button/confirm-cancel';
 

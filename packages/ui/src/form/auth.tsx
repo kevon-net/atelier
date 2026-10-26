@@ -7,6 +7,7 @@ import {
   Alert,
   Box,
   Button,
+  Divider,
   Group,
   PinInput,
   Stack,
@@ -18,23 +19,58 @@ import { AnchorNextLink } from '../anchor/next-link';
 import {
   IconAlertTriangle,
   IconBackspace,
+  IconBrandGoogle,
   IconChevronRight,
   IconInfoCircle,
   IconLogin2,
   IconMail,
 } from '@tabler/icons-react';
-import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE } from '@repo/constants';
+import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, icons } from '@repo/constants';
+import { ImageDefault } from '../image/default';
 
 export function FormAuth() {
-  const { form, display, setDisplay, step, setStep, handleRequestOtp, handleVerifyOtp, submitted } =
-    useFormAuth();
+  const {
+    form,
+    display,
+    setDisplay,
+    step,
+    setStep,
+    handleGoogleLogin,
+    handleRequestOtp,
+    handleVerifyOtp,
+    submitted,
+  } = useFormAuth();
 
   const alertProps = {
     icon: display?.message ? IconInfoCircle : display?.error ? IconAlertTriangle : undefined,
   };
 
+  const emailLength = form.values.email.trim().length;
+
   return (
     <Stack>
+      <Stack>
+        <Button
+          variant="default"
+          onClick={handleGoogleLogin}
+          loading={submitted && emailLength == 0}
+          disabled={submitted && emailLength > 0}
+          leftSection={
+            <ImageDefault
+              src={icons.google}
+              alt={'Continue with Google'}
+              height={20}
+              width={20}
+              fit="contain"
+            />
+          }
+        >
+          Continue with Google
+        </Button>
+      </Stack>
+
+      <Divider label={'or'} />
+
       <Box component="form" noValidate onSubmit={handleRequestOtp}>
         <Stack>
           <TextInput
@@ -51,9 +87,7 @@ export function FormAuth() {
                 size={ICON_WRAPPER_SIZE}
                 color="red"
                 variant="subtle"
-                display={
-                  step == 'request' && form.values.email.trim().length > 0 ? undefined : 'none'
-                }
+                display={step == 'request' && emailLength > 0 ? undefined : 'none'}
               >
                 <IconBackspace size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />
               </ActionIcon>
@@ -62,9 +96,11 @@ export function FormAuth() {
 
           <Group justify="center" display={step == 'request' ? undefined : 'none'}>
             <Button
-              // size="xs"
               type="submit"
               rightSection={<IconChevronRight size={ICON_SIZE} stroke={ICON_STROKE_WIDTH} />}
+              fullWidth
+              loading={submitted && emailLength > 0}
+              disabled={submitted && emailLength == 0}
             >
               {submitted ? 'Sending Code...' : 'Continue with Email'}
             </Button>
@@ -122,10 +158,10 @@ export function FormAuth() {
             />
           </Group>
 
-          <Group justify="center">
+          <Group justify="center" grow gap={'xs'}>
             <Button
-              variant="default"
               size="xs"
+              variant="default"
               onClick={(e) => handleRequestOtp(e, { resend: true })}
             >
               Resend Code

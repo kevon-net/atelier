@@ -17,6 +17,34 @@ export const useFormAuth = () => {
 
   const form = useForm({ initialValues: { email: '', token: '' } });
 
+  // oauth: google
+  const handleGoogleLogin = async () => {
+    if (submitted) return;
+
+    if (form.values.email.trim().length) {
+      // clear email field if not empty
+      form.setFieldValue('email', '');
+    }
+
+    setSubmitted(true);
+
+    const redirect = getUrlParam(URL_PARAM_NAME.REDIRECT) as string | null;
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        // Points back to your static app's callback route
+        redirectTo: window.location.origin + AUTH_ROUTE.SIGN_IN_CALLBACK + (redirect || ''),
+      },
+    });
+
+    if (error) {
+      setDisplay({ error: error.message });
+      setSubmitted(false);
+      return;
+    }
+  };
+
   // Step 1: Request Email OTP (Auto-creates account if new)
   const handleRequestOtp = async (e: React.FormEvent, options?: { resend?: boolean }) => {
     e.preventDefault();
@@ -106,6 +134,7 @@ export const useFormAuth = () => {
     setStep,
     display,
     setDisplay,
+    handleGoogleLogin,
     handleRequestOtp,
     handleVerifyOtp,
   };
