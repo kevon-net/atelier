@@ -16,3 +16,4 @@ atelier/
 ├── packages/             # Shared internal libraries, UI components, or design systems
 │   └── ui/
 └── experiments/          # Concept pieces, code tests, and technical sandboxes
+```
