@@ -1,5 +1,3 @@
-'use client';
-
 /// <reference types="node" />
 
 import { createClient } from '@supabase/supabase-js';
@@ -11,7 +9,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables in client environment.');
 }
 
-export const createClientSupabaseClient = () => {
+const createClientSupabaseClient = () => {
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
@@ -21,3 +19,5 @@ export const createClientSupabaseClient = () => {
     },
   });
 };
+
+export const supabaseClient = createClientSupabaseClient();

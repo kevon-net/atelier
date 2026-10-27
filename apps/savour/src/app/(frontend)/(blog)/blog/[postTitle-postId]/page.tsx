@@ -5,13 +5,15 @@ import { redirect } from 'next/navigation';
 import { linkify } from '@repo/utils';
 
 import PagePost from '@savour/ui/page/post';
-import { createServerSupabaseClient } from '@repo/cloudbase';
+import { supabaseClient } from '@repo/cloudbase';
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase.schema('cms_savour').from('posts').select('id, title');
+  const { data, error } = await supabaseClient
+    .schema('cms_savour')
+    .from('posts')
+    .select('id, title');
 
   if (error || data == null) return [];
 

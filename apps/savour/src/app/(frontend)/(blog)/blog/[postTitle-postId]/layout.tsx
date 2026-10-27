@@ -1,6 +1,6 @@
 import React from 'react';
 import { LayoutMain } from '@repo/ui';
-import { createServerSupabaseClient } from '@repo/cloudbase';
+import { supabaseClient } from '@repo/cloudbase';
 import { typeParams } from '../layout';
 import { Metadata } from 'next';
 import { extractUuidFromParam, linkify } from '@repo/utils';
@@ -12,8 +12,7 @@ export const generateMetadata = async ({
 }: {
   params: Promise<typeParams>;
 }): Promise<Metadata> => {
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .schema('cms_savour')
     .from('posts')
     .select('id, title, content');
