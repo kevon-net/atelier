@@ -1,4 +1,4 @@
-import { Prisma, Profile } from '@savour/generated/prisma/client';
+import { Prisma, Profile } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type ProfileCreate = Prisma.ProfileCreateInput;
