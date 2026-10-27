@@ -5,12 +5,19 @@
       "cache": true,
       "env": ["DATABASE_URL", "DIRECT_URL"]
     },
-    "db:migrate:dev": {
-      "cache": false,
-      "env": ["DATABASE_URL", "DIRECT_URL"]
+    "savour:payload-generate-types": {
+      "cache": true
+    },
+    "savour:payload-generate-importmap": {
+      "cache": true
     },
     "build": {
-      "dependsOn": ["^build", "savour#db:generate"],
+      "dependsOn": [
+        "^build",
+        "db:generate",
+        "savour:payload-generate-types",
+        "savour:payload-generate-importmap"
+      ],
       "env": [
         "TURBO_TELEMETRY_DISABLED=1",
 
@@ -21,6 +28,7 @@
 
         "NEXT_PUBLIC_SUPABASE_URL",
         "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SECRET_KEY",
 
         "NEXT_PUBLIC_VERCEL_ENV",
         "NEXT_PUBLIC_VERCEL_URL",
