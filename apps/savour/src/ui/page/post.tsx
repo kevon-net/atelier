@@ -1,16 +1,9 @@
 import React from 'react';
-import { createServerSupabaseClient } from '@repo/cloudbase';
+import { getPost } from '@savour/handlers/data/posts';
 import { RichText } from '@payloadcms/richtext-lexical/react';
 
 export default async function PagePost({ postId }: { postId: string }) {
-  const supabase = createServerSupabaseClient();
-
-  const { data, error } = await supabase
-    .schema('cms_savour')
-    .from('posts')
-    .select('id, title, content')
-    .eq('id', postId)
-    .maybeSingle();
+  const { data, error } = await getPost(postId);
 
   return (
     <div>

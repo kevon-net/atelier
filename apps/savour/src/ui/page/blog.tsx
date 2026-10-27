@@ -1,20 +1,14 @@
 import React from 'react';
-import { createServerSupabaseClient } from '@repo/cloudbase';
+import { getPosts } from '@savour/handlers/data/posts';
 
 export default async function PageBlog() {
-  const supabase = createServerSupabaseClient();
-
-  const { data, error } = await supabase
-    .schema('cms_savour')
-    .from('posts')
-    .select('id, title, content')
-    .order('created_at', { ascending: false });
+  const { data, error } = await getPosts();
 
   return (
     <div>
       <p>PageBlog</p>
 
-      <div>Error: {error?.message}</div>
+      <div>Error: {JSON.stringify(error)}</div>
       <div>Data: {JSON.stringify(data)}</div>
     </div>
   );

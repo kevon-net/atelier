@@ -1,21 +1,18 @@
 import React from 'react';
 import { LayoutMain } from '@repo/ui';
-import { supabaseClient } from '@repo/cloudbase';
 import { typeParams } from '../layout';
 import { Metadata } from 'next';
 import { extractUuidFromParam, linkify } from '@repo/utils';
 import { BASE_URL, BRAND_NAME } from '@repo/constants';
 import { images } from '@savour/constants/images';
+import { getPosts } from '@savour/handlers/data/posts';
 
 export const generateMetadata = async ({
   params,
 }: {
   params: Promise<typeParams>;
 }): Promise<Metadata> => {
-  const { data, error } = await supabaseClient
-    .schema('cms_savour')
-    .from('posts')
-    .select('id, title, content');
+  const { data, error } = await getPosts();
 
   if (error || data == null) console.error('[Error] Posts not found', error);
 

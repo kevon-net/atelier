@@ -3,17 +3,13 @@ import { typeParams } from '../layout';
 import { extractUuidFromParam } from '@repo/utils';
 import { redirect } from 'next/navigation';
 import { linkify } from '@repo/utils';
-
 import PagePost from '@savour/ui/page/post';
-import { supabaseClient } from '@repo/cloudbase';
+import { getPosts } from '@savour/handlers/data/posts';
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const { data, error } = await supabaseClient
-    .schema('cms_savour')
-    .from('posts')
-    .select('id, title');
+  const { data, error } = await getPosts();
 
   if (error || data == null) return [];
 
