@@ -1,4 +1,4 @@
-import { Prisma, Folder } from '@savour/generated/prisma/client';
+import { Prisma, Folder } from '@repo/db';
 
 // Type for creating a item (without id and relations)
 export type FolderCreate = Prisma.FolderCreateInput;

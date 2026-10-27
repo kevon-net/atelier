@@ -10,18 +10,16 @@ export const AUTH_ROUTE = {
 };
 
 export const authRoutes = [
+  // Add auth routes
+
   AUTH_ROUTE.SIGN_UP,
   AUTH_ROUTE.SIGN_IN,
   AUTH_ROUTE.ERROR,
   AUTH_ROUTE.SIGNED_OUT,
   AUTH_ROUTE.SIGN_IN_CALLBACK,
-
-  // Add other auth routes
 ];
 
 export const protectedRoutes = [
   AUTH_ROUTE.SIGN_OUT,
-  '/admin',
-
-  // // Add other protected routes
+  // Add protected routes
 ];

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@repo/cloudbase';
+import { supabaseClient } from '@repo/cloudbase';
 import { getUrlParam } from '@repo/utils';
 import { AUTH_ROUTE, ICON_WRAPPER_SIZE, icons, URL_PARAM_NAME } from '@repo/constants';
 import { Center, Stack, Text } from '@mantine/core';
@@ -12,7 +12,7 @@ export default function AuthCallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         const redirectUtl = getUrlParam(URL_PARAM_NAME.REDIRECT) as string | null;
         router.replace(redirectUtl ? decodeURIComponent(redirectUtl) : AUTH_ROUTE.REDIRECT);

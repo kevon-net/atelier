@@ -17,9 +17,10 @@
     "supabase:start": "supabase start -x studio,realtime,storage-api,imgproxy,logflare,vector",
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
-    "supabase:reset": "supabase db reset",
-    "supabase:migration-new": "supabase migration new migration_name",
-    "supabase:gen-types": "supabase gen types typescript --local > ../../packages/database/src/types.ts"
+    "supabase:db-reset": "supabase db reset",
+    "supabase:db-push": "supabase db push",
+    "supabase:migration-new": "supabase migration new",
+    "supabase:gen-types": "supabase gen types typescript --local > ../../packages/types/src/supabase.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

@@ -2,7 +2,8 @@
   "extends": "@repo/config/tsconfig/next.base.json",
   "compilerOptions": {
     "paths": {
-      "@savour/*": ["./src/*"]
+      "@savour/*": ["./src/*"],
+      "@payload-config": ["./src/payload.config.ts"]
     }
   },
   "include": [

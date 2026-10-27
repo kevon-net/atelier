@@ -7,7 +7,7 @@ export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: {
     path: 'prisma/migrations',
-    seed: 'npx tsx src/seed.ts',
+    // seed: 'npx tsx src/seed.ts',
   },
   datasource: {
     // If DIRECT_URL exists in .env, Prisma CLI uses it for migrations.

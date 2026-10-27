@@ -3,6 +3,11 @@ export const next = {
     qualities: [25, 50, 75, 100],
     unoptimized: true,
     dangerouslyAllowSVG: true,
+    localPatterns: [
+      {
+        pathname: '/api/media/file/**',
+      },
+    ],
     remotePatterns: [
       {
         protocol: 'https',

@@ -27,16 +27,6 @@ enum Role {
   @@schema("savour")
 }
 
-// enum SyncStatus {
-//   PENDING
-//   SYNCED
-//   SAVED
-//   ERROR
-//   DELETED
-
-//   @@schema("savour")
-// }
-
 //
 // CORE
 //
@@ -47,9 +37,9 @@ model Profile {
   userName   String? @map("user_name")
   avatar     String?
   customized Boolean @default(false)
+  role       Role    @default(USER)
 
-  folders   Folder[]
-  inquiries Inquiry[]
+  folders Folder[]
 
   // syncStatus SyncStatus @default(SYNCED) @map("sync_status")
 
@@ -69,7 +59,6 @@ model Profile {
 model Folder {
   id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name     String
-  location String
   folderId String? @map("folder_id") // points to parent folder
 
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -79,22 +68,5 @@ model Folder {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("folders")
-  @@schema("savour")
-}
-
-model Inquiry {
-  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name    String
-  email   String
-  subject String
-  message String
-
-  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String?  @map("profile_id") @db.Uuid
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("inquiries")
   @@schema("savour")
 }

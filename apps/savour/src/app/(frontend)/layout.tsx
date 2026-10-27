@@ -32,7 +32,7 @@ const fontDefaultMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: APP_NAME,
+  title: { default: APP_NAME, template: `%s - ${APP_NAME}` },
   description: APP_DESC,
 };
 

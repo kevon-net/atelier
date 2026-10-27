@@ -1,3 +1,5 @@
+-- supabase/migrations/20261025111350_create_profile_trigger.sql
+
 create or replace function savour.handle_new_user()
 returns trigger
 language plpgsql

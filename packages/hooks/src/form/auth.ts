@@ -5,7 +5,7 @@ import { AUTH_ROUTE, URL_PARAM_NAME } from '@repo/constants';
 import { useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@repo/cloudbase';
+import { supabaseClient } from '@repo/cloudbase';
 
 export const useFormAuth = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ export const useFormAuth = () => {
 
     const redirect = getUrlParam(URL_PARAM_NAME.REDIRECT) as string | null;
 
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
         // Points back to your static app's callback route
@@ -69,7 +69,7 @@ export const useFormAuth = () => {
 
     setDisplay(null);
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabaseClient.auth.signInWithOtp({
       email: formValues.email,
       options: {
         // If enable_confirmations is false in config.toml, this logs them in immediately.
@@ -109,7 +109,7 @@ export const useFormAuth = () => {
 
     setDisplay(null);
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { error } = await supabaseClient.auth.verifyOtp({
       email: formValues.email,
       token: formValues.token,
       type: 'email',
