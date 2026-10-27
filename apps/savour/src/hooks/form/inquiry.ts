@@ -1,9 +1,9 @@
 'use client';
 
 import { UseFormReturnType } from '@mantine/form';
-import { InquiryGet } from '@savour/types/models/inquiry';
+import type { Inquiry } from '@savour/payload-types';
 
-export type FormValuesInquiry = InquiryGet & {
+export type FormValuesInquiry = Inquiry & {
   appName: '';
 };
 
