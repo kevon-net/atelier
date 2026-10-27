@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@repo/cloudbase';
+import { createClientSupabaseClient } from '@repo/cloudbase';
 import { getUrlParam } from '@repo/utils';
 import { AUTH_ROUTE, ICON_WRAPPER_SIZE, icons, URL_PARAM_NAME } from '@repo/constants';
 import { Center, Stack, Text } from '@mantine/core';
@@ -10,6 +10,8 @@ import { ImageDefault, SpinnerApp } from '@repo/ui';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
+
+  const supabase = createClientSupabaseClient();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
