@@ -20,7 +20,6 @@ CREATE TABLE "savour"."profiles" (
 CREATE TABLE "savour"."folders" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
     "folder_id" TEXT,
     "profile_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -37,4 +36,3 @@ CREATE UNIQUE INDEX "profiles_user_name_key" ON "savour"."profiles"("user_name")
 
 -- AddForeignKey
 ALTER TABLE "savour"."folders" ADD CONSTRAINT "folders_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "savour"."profiles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-

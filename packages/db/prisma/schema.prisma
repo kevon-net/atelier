@@ -59,7 +59,6 @@ model Profile {
 model Folder {
   id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name     String
-  location String
   folderId String? @map("folder_id") // points to parent folder
 
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
