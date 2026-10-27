@@ -28,6 +28,7 @@ export * from './partial/loading/page';
 
 export * from './provider/auth';
 export * from './provider/mantine';
+export * from './provider/react-query';
 export * from './provider/route-protection';
 
 export * from './spinner/app';
