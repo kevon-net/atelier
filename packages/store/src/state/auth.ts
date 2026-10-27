@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@repo/cloudbase';
+import { createClientSupabaseClient } from '@repo/cloudbase';
 import { AUTH_ROUTE, URL_PARAM_NAME } from '@repo/constants';
 
 interface AuthState {
@@ -25,6 +25,8 @@ export const useStoreAuth = create<AuthState>((set) => ({
     }
 
     set({ isInitialized: true });
+
+    const supabase = createClientSupabaseClient();
 
     // Fetch initial session persisted in localStorage
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -54,6 +56,7 @@ export const useStoreAuth = create<AuthState>((set) => ({
   signOut: async () => {
     set({ isLoading: true });
 
+    const supabase = createClientSupabaseClient();
     const { error } = await supabase.auth.signOut();
 
     if (error) {

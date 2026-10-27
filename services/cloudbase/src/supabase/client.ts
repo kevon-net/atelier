@@ -11,11 +11,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables in client environment.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true, // Crucial for OAuth/Magic Link callbacks
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-  },
-});
+export const createClientSupabaseClient = () => {
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true, // Crucial for OAuth/Magic Link callbacks
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    },
+  });
+};

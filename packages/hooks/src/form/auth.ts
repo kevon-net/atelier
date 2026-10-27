@@ -5,7 +5,7 @@ import { AUTH_ROUTE, URL_PARAM_NAME } from '@repo/constants';
 import { useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@repo/cloudbase';
+import { createClientSupabaseClient } from '@repo/cloudbase';
 
 export const useFormAuth = () => {
   const router = useRouter();
@@ -16,6 +16,8 @@ export const useFormAuth = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm({ initialValues: { email: '', token: '' } });
+
+  const supabase = createClientSupabaseClient();
 
   // oauth: google
   const handleGoogleLogin = async () => {
