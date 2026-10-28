@@ -56,7 +56,7 @@ export function ImageDefault({
         loading={restProps.priority ? undefined : 'lazy'}
         fill
         quality={restProps.quality || 100}
-        radius={'lg'}
+        radius={'var(---mantine-radius-default)'}
         {...restProps}
       />
     </Center>

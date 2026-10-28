@@ -6,22 +6,22 @@ import classes from './theme.module.css';
 export const mantineTheme: MantineThemeOverride = {
   colors: {
     pri: [
-      '#f7f3e6',
-      '#e1dbce',
-      '#cbc3b3',
-      '#b5ab96',
-      '#a09379',
-      '#877960',
-      '#695e4a', // src (6)
-      '#4b4334',
-      '#2e281d',
-      '#150c00',
+      '#ffeae2',
+      '#fbc7b9',
+      '#f2a58d',
+      '#eb8261',
+      '#e45e35', // src: 4
+      '#ca451b',
+      '#9e3414',
+      '#71250d',
+      '#461505',
+      '#1e0400',
     ],
   },
 
   primaryColor: 'pri',
-  defaultRadius: 'sm',
-  primaryShade: { light: 5, dark: 5 },
+  defaultRadius: 'md',
+  primaryShade: { light: 4, dark: 4 },
   luminanceThreshold: 0.3,
   cursorType: 'pointer',
   activeClassName: classes.active,
