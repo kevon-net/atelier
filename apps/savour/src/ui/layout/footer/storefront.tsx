@@ -17,18 +17,9 @@ import {
   Title,
 } from '@mantine/core';
 import { ICON_SIZE, ICON_STROKE_WIDTH, ICON_WRAPPER_SIZE, SECTION_SPACING } from '@repo/constants';
-import { APP_NAME, EMAILS, LOCATIONS, PHONES, SOCIALS } from '@savour/constants/app';
+import { APP_NAME, contactsArray, socialsArray } from '@savour/constants/app';
 import { useMediaQuery } from '@mantine/hooks';
-import {
-  IconArrowUpRight,
-  IconBrandFacebookFilled,
-  IconBrandInstagramFilled,
-  IconBrandLinkedinFilled,
-  IconBrandXFilled,
-  IconMail,
-  IconMapPin,
-  IconPhone,
-} from '@tabler/icons-react';
+import { IconArrowUpRight } from '@tabler/icons-react';
 import { BrandLogo, navlinks } from '@savour/ui/drawer/navbar/storefront';
 
 export default function LayoutFooterstorefront() {
@@ -69,7 +60,7 @@ export default function LayoutFooterstorefront() {
                   </Title>
 
                   <Group gap={5}>
-                    {socials.map((si) => (
+                    {socialsArray.map((si) => (
                       <ActionIcon
                         size={ICON_WRAPPER_SIZE * 1.4}
                         radius={999}
@@ -109,7 +100,7 @@ export default function LayoutFooterstorefront() {
 
                       <Stack tt={'uppercase'} gap={0}>
                         {workingHours.map((wi, i) => (
-                          <>
+                          <div key={`${wi.day}+${wi.time}`}>
                             {i > 0 && <Divider my={'sm'} color="var(--mantine-color-dark-3)" />}
 
                             <Group justify="space-between">
@@ -118,7 +109,7 @@ export default function LayoutFooterstorefront() {
                                 {wi.time}
                               </Text>
                             </Group>
-                          </>
+                          </div>
                         ))}
                       </Stack>
                     </Stack>
@@ -147,7 +138,7 @@ export default function LayoutFooterstorefront() {
                       </Title>
 
                       <Stack>
-                        {contacts.map((ci) => (
+                        {contactsArray.map((ci) => (
                           <Group key={ci.link} wrap="nowrap">
                             <ThemeIcon
                               size={ICON_WRAPPER_SIZE * 1.4}
@@ -194,47 +185,6 @@ export default function LayoutFooterstorefront() {
 const workingHours = [
   { day: 'Mon - Fri', time: '8:00 AM - 6:00 PM' },
   { day: 'Saturday', time: '9:00 AM - 5:00 PM' },
-];
-
-const socials = [
-  {
-    icon: IconBrandFacebookFilled,
-    label: SOCIALS.FB.label,
-    link: SOCIALS.FB.link,
-  },
-  {
-    icon: IconBrandInstagramFilled,
-    label: SOCIALS.IG.label,
-    link: SOCIALS.IG.link,
-  },
-  // {
-  //   icon: IconBrandLinkedinFilled,
-  //   label: SOCIALS.LI.label,
-  //   link: SOCIALS.LI.link,
-  // },
-  {
-    icon: IconBrandXFilled,
-    label: SOCIALS.X.label,
-    link: SOCIALS.X.link,
-  },
-];
-
-const contacts = [
-  {
-    icon: IconMapPin,
-    label: LOCATIONS.MAIN.LOCATION,
-    link: LOCATIONS.MAIN.PIN,
-  },
-  {
-    icon: IconPhone,
-    label: PHONES.MAIN,
-    link: `tel:${PHONES.MAIN}`.replaceAll('-', '').replaceAll(' ', ''),
-  },
-  {
-    icon: IconMail,
-    label: EMAILS.INQUIRIES,
-    link: `mailto:${EMAILS.INQUIRIES}`,
-  },
 ];
 
 function FormSubscribe() {

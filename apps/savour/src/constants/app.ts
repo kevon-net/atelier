@@ -1,3 +1,12 @@
+import {
+  IconBrandFacebookFilled,
+  IconBrandInstagramFilled,
+  IconBrandXFilled,
+  IconMail,
+  IconMapPin,
+  IconPhone,
+} from '@tabler/icons-react';
+
 export const APP_NAME = 'Savour';
 
 export const APP_DESC = `${APP_NAME} offers a delightful dining experience with fresh, locally sourced ingredients and authentic [Cuisine Type] dishes. Reserve your table or order online today!`;
@@ -42,3 +51,44 @@ export const SOCIALS = {
     link: '#linkedin',
   },
 };
+
+export const socialsArray = [
+  {
+    icon: IconBrandFacebookFilled,
+    label: SOCIALS.FB.label,
+    link: SOCIALS.FB.link,
+  },
+  {
+    icon: IconBrandInstagramFilled,
+    label: SOCIALS.IG.label,
+    link: SOCIALS.IG.link,
+  },
+  // {
+  //   icon: IconBrandLinkedinFilled,
+  //   label: SOCIALS.LI.label,
+  //   link: SOCIALS.LI.link,
+  // },
+  {
+    icon: IconBrandXFilled,
+    label: SOCIALS.X.label,
+    link: SOCIALS.X.link,
+  },
+];
+
+export const contactsArray = [
+  {
+    icon: IconMapPin,
+    label: LOCATIONS.MAIN.LOCATION,
+    link: LOCATIONS.MAIN.PIN,
+  },
+  {
+    icon: IconPhone,
+    label: PHONES.MAIN,
+    link: `tel:${PHONES.MAIN}`.replaceAll('-', '').replaceAll(' ', ''),
+  },
+  {
+    icon: IconMail,
+    label: EMAILS.INQUIRIES,
+    link: `mailto:${EMAILS.INQUIRIES}`,
+  },
+];
