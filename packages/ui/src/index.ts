@@ -1,3 +1,5 @@
+export * from './affixi/navbar';
+
 export * from './anchor/next-link';
 
 export * from './avatar/session';
