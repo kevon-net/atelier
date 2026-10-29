@@ -22,6 +22,7 @@ import {
   Divider,
   NavLinkProps,
   MenuItemProps,
+  TitleProps,
 } from '@mantine/core';
 import {
   Icon,
@@ -75,7 +76,7 @@ type Navlink = Link & {
   subLinks?: Navlink[];
 };
 
-const navlinks: Navlink[] = [
+export const navlinks: Navlink[] = [
   {
     path: '/about',
     label: 'About Us',
@@ -126,10 +127,10 @@ const navlinks: Navlink[] = [
   },
 ];
 
-export function BrandLogo() {
+export function BrandLogo({ titleProps }: { titleProps?: TitleProps }) {
   return (
     <AnchorNextLink href={'/'}>
-      <Title order={1} c={'var(--mantine-color-text)'}>
+      <Title order={1} c={'var(--mantine-color-text)'} {...titleProps}>
         savor<span className="text-[#e66b45]">.</span>
       </Title>
     </AnchorNextLink>
